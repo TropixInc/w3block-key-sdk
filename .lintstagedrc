@@ -1,0 +1,8 @@
+{
+  "**/*.ts?(x)": [
+    "npm run api:gen",
+    "npm run lint",
+    "bash -c 'npm run check-types'",
+    "bash -c 'npm run build'"
+  ]
+}

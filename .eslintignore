@@ -1,0 +1,8 @@
+*.config.js
+*.config.ts
+*.test.js
+*.test.ts
+dist
+src/api/index.ts
+tools/*.js
+

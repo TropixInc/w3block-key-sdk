@@ -1,0 +1,25 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [],
+    "words": [
+        "bignumber",
+        "blockid",
+        "datefns",
+        "ethersproject",
+        "Eventix",
+        "jwks",
+        "Jwks",
+        "Numberish",
+        "openapi",
+        "Pixway",
+        "signin",
+        "Tropix",
+        "tropixinc"
+    ],
+    "ignoreWords": [
+        "pixchain"
+    ],
+    "import": []
+}

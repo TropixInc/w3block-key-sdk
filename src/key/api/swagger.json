@@ -1,0 +1,6812 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Health Check is successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {},
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The Health Check is not successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    },
+                    "info": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
+                      "nullable": true
+                    },
+                    "error": {
+                      "type": "object",
+                      "example": {
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      },
+                      "nullable": true
+                    },
+                    "details": {
+                      "type": "object",
+                      "example": {
+                        "database": {
+                          "status": "up"
+                        },
+                        "redis": {
+                          "status": "down",
+                          "message": "Could not connect"
+                        }
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          }
+                        },
+                        "additionalProperties": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/health/liveness": {
+      "get": {
+        "operationId": "getLiveness",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/health/readiness": {
+      "get": {
+        "operationId": "getReadiness",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/health/metrics": {
+      "get": {
+        "operationId": "index",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/migrations/run": {
+      "post": {
+        "operationId": "runMigrations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MigrationDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Util"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/migrations/revert": {
+      "post": {
+        "operationId": "revertMigrations",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Util"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/migrations/pending": {
+      "get": {
+        "operationId": "getPendingMigrations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PendingMigrationsResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Util"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/migrations/list": {
+      "get": {
+        "operationId": "getAllMigrations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MigrationDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Util"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/account-complete/retry": {
+      "post": {
+        "operationId": "accountCompleteRetry",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountCompleteRetryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/hosts/by-host": {
+      "get": {
+        "operationId": "getCompanyByHost",
+        "parameters": [
+          {
+            "name": "host",
+            "required": true,
+            "in": "query",
+            "example": "tropix.pixway.io",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/hosts/toggle/is-main": {
+      "put": {
+        "operationId": "toggleMainHost",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ByHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: admin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/hosts": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/hosts/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "put": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyHostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies/Hosts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/profile/{id}": {
+      "patch": {
+        "operationId": "updateProfile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/resync-clone-contract": {
+      "post": {
+        "operationId": "resyncCloneContracts",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/companies/{id}/emails": {
+      "post": {
+        "operationId": "createOrUpdateEmail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findEmails",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Companies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/blockchain/webhook/event/{companyId}": {
+      "post": {
+        "operationId": "receiveEventWebhook",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventNotifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized - Invalid Pixchain signature"
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ]
+      }
+    },
+    "/blockchain/webhook/transaction/{companyId}": {
+      "post": {
+        "operationId": "receiveTransactionWebhook",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-pixchain-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized - Invalid Pixchain signature"
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ]
+      }
+    },
+    "/blockchain/balance/{address}/{chainId}": {
+      "get": {
+        "operationId": "getBalance",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/blockchain/gas-cost/{companyId}": {
+      "get": {
+        "operationId": "getGas",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Blockchain"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/contacts/invite": {
+      "post": {
+        "operationId": "invite",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteRoyaltyContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoyaltyContactResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Contracts/Contacts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/contacts/import": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoyaltyContactDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoyaltyContactResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Contracts/Contacts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/contacts": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "client",
+                "partner",
+                "team"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "minDate",
+            "required": false,
+            "in": "query",
+            "example": "2022-02-15T10:30:05-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxDate",
+            "required": false,
+            "in": "query",
+            "example": "2022-02-15T10:30:05-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Contracts/Contacts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/contacts/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoyaltyContactResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Contracts/Contacts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoyaltyContactDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoyaltyContactResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Contracts/Contacts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContractDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NftContractEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1000,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "draft",
+                "publishing",
+                "published",
+                "failed"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractName",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minDate",
+            "required": false,
+            "in": "query",
+            "example": "2022-02-15T10:30:05-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxDate",
+            "required": false,
+            "in": "query",
+            "example": "2022-02-15T10:30:05-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contactId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantName",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/{id}": {
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContractDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NftContractEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NftContractEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/{id}/publish": {
+      "patch": {
+        "operationId": "publish",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/contracts/{id}/estimate-gas": {
+      "get": {
+        "operationId": "estimateGas",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractEstimateGasResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Contracts"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/retry-bulk-by-collection": {
+      "patch": {
+        "operationId": "retry",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkTokenEditionByCollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokenCollectionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/check-rfid": {
+      "get": {
+        "operationId": "checkRfid",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rfid",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RfidResponseDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/ready-to-mint": {
+      "patch": {
+        "operationId": "changeStatusReadyToMint",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeStatusReadyToMintDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/estimate-gas/mint": {
+      "get": {
+        "operationId": "estimateMintGas",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "quantityToMint",
+            "required": true,
+            "in": "query",
+            "example": 1,
+            "description": "quantity of token to mint",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractEstimateGasResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/ready-to-mint": {
+      "patch": {
+        "operationId": "changeStatusReadyToMintByEdition",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenEditionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/burn": {
+      "delete": {
+        "operationId": "burnTokenEdition",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BurnTokensDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/estimate-gas/burn": {
+      "get": {
+        "operationId": "estimateBurnGas",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractEstimateGasResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, user"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/rfid": {
+      "patch": {
+        "operationId": "changeRfidByEdition",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeRfidDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenEditionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenEditionPublicDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/transfer-token": {
+      "patch": {
+        "operationId": "transferToken",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferTokensDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/estimate-gas/transfer": {
+      "get": {
+        "operationId": "estimateTransferGas",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toAddress",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractEstimateGasResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/transfer-token": {
+      "patch": {
+        "operationId": "transferTokenByEdition",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferTokenByEditionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/{id}/get-last/{type}": {
+      "get": {
+        "operationId": "getLastTransferToken",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenCollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenCollectionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "draft",
+                "published"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/publish/{id}": {
+      "patch": {
+        "operationId": "publish",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTokenCollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishTokenCollectionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/estimate-gas": {
+      "get": {
+        "operationId": "estimatePublishGas",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contractId",
+            "required": true,
+            "in": "query",
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "initialQuantityToMint",
+            "required": true,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "ownerAddress",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractEstimateGasResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/{id}": {
+      "put": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTokenCollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenCollectionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenCollectionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/{id}/burn": {
+      "delete": {
+        "operationId": "burnTokenCollection",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/{id}/draft": {
+      "delete": {
+        "operationId": "deleteSingleDraft",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/subcategories": {
+      "post": {
+        "operationId": "create",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubcategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubcategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubcategoryEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/subcategories/{id}": {
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubcategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubcategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubcategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/subcategories": {
+      "post": {
+        "operationId": "createWithoutCompany",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubcategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/subcategories/{id}": {
+      "patch": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubcategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Subcategories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/categories": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Categories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Categories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/categories/{id}": {
+      "put": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin"
+          }
+        },
+        "tags": [
+          "Categories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Categories"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/auth/verify-sign-up": {
+      "get": {
+        "operationId": "verifySignUp",
+        "parameters": [
+          {
+            "name": "email",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/cloudinary/get-signature": {
+      "get": {
+        "operationId": "getSignature",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignaturePayloadResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Cloudinary"
+        ]
+      }
+    },
+    "/{companyId}/jobs": {
+      "get": {
+        "operationId": "findAll",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AbstractBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/jobs/{id}": {
+      "get": {
+        "operationId": "findOne",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobEntityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Jobs"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/metadata/by-collection/{collectionId}/{editionNumber}": {
+      "get": {
+        "operationId": "byCollectionAndEditionNumber",
+        "parameters": [
+          {
+            "name": "collectionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "editionNumber",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenEditionInformationBaseResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/token/{address}/{chainId}/{tokenId}": {
+      "get": {
+        "operationId": "tokenPayload",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "tokenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPayloadDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/rfid/{rfid}": {
+      "get": {
+        "operationId": "publicPageByRFID",
+        "parameters": [
+          {
+            "name": "rfid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPageDataDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/address/{address}/{chainId}/{tokenId}": {
+      "get": {
+        "operationId": "publicPageByAddress",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "tokenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPageDataDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/contract/{address}/{chainId}": {
+      "get": {
+        "operationId": "getContractByAddressAndChainId",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractBcDataDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/nfts/{address}/{chainId}": {
+      "get": {
+        "operationId": "getAllNFTs",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "forceRefresh",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NFTsMetadataResponseDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "NFTs for a wallet"
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/nfts/{address}/{chainId}/{tokenId}": {
+      "get": {
+        "operationId": "getNFTByContractAndTokenId",
+        "parameters": [
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "tokenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "forceRefresh",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NFTsMetadataResponseDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "NFT metadata related a contract address"
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/metadata/transactions/{companyId}/count/{address}/{chainId}": {
+      "get": {
+        "operationId": "countTransactionsByAddress",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          },
+          {
+            "name": "address",
+            "required": true,
+            "in": "path",
+            "example": "0x095358452C33916513a3827a2D086da1aCEd7EE0",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountTransactionsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/metadata/transactions/{companyId}/count/{chainId}": {
+      "get": {
+        "operationId": "countTransactions",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "chainId",
+            "required": true,
+            "in": "path",
+            "example": 4,
+            "schema": {
+              "$ref": "#/components/schemas/ChainId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountTransactionsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metadata"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/metadata/history": {
+      "get": {
+        "operationId": "getMetadataUpdateHistory",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": true,
+            "in": "query",
+            "example": "2022-07-15",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": true,
+            "in": "query",
+            "example": "2022-07-20",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/contacts/contact-us": {
+      "post": {
+        "operationId": "create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactEntityDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "pixway-registry",
+    "description": "",
+    "version": "0.3.2",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "JWT",
+        "description": "Enter JWT token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "MigrationDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "timestamp",
+          "name",
+          "instance"
+        ]
+      },
+      "PendingMigrationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number"
+          },
+          "pending": {
+            "type": "boolean"
+          },
+          "migrations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "count",
+          "pending",
+          "migrations"
+        ]
+      },
+      "AccountCompleteRetryDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "companyId"
+        ]
+      },
+      "ByHostDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "example": "tropix.pixway.io"
+          }
+        },
+        "required": [
+          "host"
+        ]
+      },
+      "CreateCompanyHostDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "example": "tropix.pixway.io"
+          },
+          "companyId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "host",
+          "companyId"
+        ]
+      },
+      "UpdateCompanyHostDto": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "example": "tropix.pixway.io"
+          },
+          "companyId": {
+            "type": "string"
+          }
+        }
+      },
+      "RoyaltyPlatformDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Pixway"
+          },
+          "share": {
+            "type": "number",
+            "example": 2.5
+          },
+          "payee": {
+            "type": "string",
+            "example": "0xbc99eb9e5a05c72ca34c3554d12266e7a48e63b7"
+          }
+        }
+      },
+      "CreateCompanyDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "description": "Id in W3blockID",
+            "format": "uuid"
+          },
+          "host": {
+            "type": "string",
+            "example": "tropix.pixway.io"
+          },
+          "platformRoyalty": {
+            "$ref": "#/components/schemas/RoyaltyPlatformDto"
+          }
+        },
+        "required": [
+          "tenantId",
+          "host"
+        ]
+      },
+      "CountryCodeEnum": {
+        "type": "string",
+        "enum": [
+          "BGD",
+          "BEL",
+          "BFA",
+          "BGR",
+          "BIH",
+          "BRB",
+          "WLF",
+          "BLM",
+          "BMU",
+          "BRN",
+          "BOL",
+          "BHR",
+          "BDI",
+          "BEN",
+          "BTN",
+          "JAM",
+          "BVT",
+          "BWA",
+          "WSM",
+          "BES",
+          "BRA",
+          "BHS",
+          "JEY",
+          "BLR",
+          "BLZ",
+          "RUS",
+          "RWA",
+          "SRB",
+          "TLS",
+          "REU",
+          "TKM",
+          "TJK",
+          "ROU",
+          "TKL",
+          "GNB",
+          "GUM",
+          "GTM",
+          "SGS",
+          "GRC",
+          "GNQ",
+          "GLP",
+          "JPN",
+          "GUY",
+          "GGY",
+          "GUF",
+          "GEO",
+          "GRD",
+          "GBR",
+          "GAB",
+          "SLV",
+          "GIN",
+          "GMB",
+          "GRL",
+          "GIB",
+          "GHA",
+          "OMN",
+          "TUN",
+          "JOR",
+          "HRV",
+          "HTI",
+          "HUN",
+          "HKG",
+          "HND",
+          "HMD",
+          "VEN",
+          "PRI",
+          "PSE",
+          "PLW",
+          "PRT",
+          "SJM",
+          "PRY",
+          "IRQ",
+          "PAN",
+          "PYF",
+          "PNG",
+          "PER",
+          "PAK",
+          "PHL",
+          "PCN",
+          "POL",
+          "SPM",
+          "ZMB",
+          "ESH",
+          "EST",
+          "EGY",
+          "ZAF",
+          "ECU",
+          "ITA",
+          "VNM",
+          "SLB",
+          "ETH",
+          "SOM",
+          "ZWE",
+          "SAU",
+          "ESP",
+          "ERI",
+          "MNE",
+          "MDA",
+          "MDG",
+          "MAF",
+          "MAR",
+          "MCO",
+          "UZB",
+          "MMR",
+          "MLI",
+          "MAC",
+          "MNG",
+          "MHL",
+          "MKD",
+          "MUS",
+          "MLT",
+          "MWI",
+          "MDV",
+          "MTQ",
+          "MNP",
+          "MSR",
+          "MRT",
+          "IMN",
+          "UGA",
+          "TZA",
+          "MYS",
+          "MEX",
+          "ISR",
+          "FRA",
+          "IOT",
+          "SHN",
+          "FIN",
+          "FJI",
+          "FLK",
+          "FSM",
+          "FRO",
+          "NIC",
+          "NLD",
+          "NOR",
+          "NAM",
+          "VUT",
+          "NCL",
+          "NER",
+          "NFK",
+          "NGA",
+          "NZL",
+          "NPL",
+          "NRU",
+          "NIU",
+          "COK",
+          "XKX",
+          "CIV",
+          "CHE",
+          "COL",
+          "CHN",
+          "CMR",
+          "CHL",
+          "CCK",
+          "CAN",
+          "COG",
+          "CAF",
+          "COD",
+          "CZE",
+          "CYP",
+          "CXR",
+          "CRI",
+          "CUW",
+          "CPV",
+          "CUB",
+          "SWZ",
+          "SYR",
+          "SXM",
+          "KGZ",
+          "KEN",
+          "SSD",
+          "SUR",
+          "KIR",
+          "KHM",
+          "KNA",
+          "COM",
+          "STP",
+          "SVK",
+          "KOR",
+          "SVN",
+          "PRK",
+          "KWT",
+          "SEN",
+          "SMR",
+          "SLE",
+          "SYC",
+          "KAZ",
+          "CYM",
+          "SGP",
+          "SWE",
+          "SDN",
+          "DOM",
+          "DMA",
+          "DJI",
+          "DNK",
+          "VGB",
+          "DEU",
+          "YEM",
+          "DZA",
+          "USA",
+          "URY",
+          "MYT",
+          "UMI",
+          "LBN",
+          "LCA",
+          "LAO",
+          "TUV",
+          "TWN",
+          "TTO",
+          "TUR",
+          "LKA",
+          "LIE",
+          "LVA",
+          "TON",
+          "LTU",
+          "LUX",
+          "LBR",
+          "LSO",
+          "THA",
+          "ATF",
+          "TGO",
+          "TCD",
+          "TCA",
+          "LBY",
+          "VAT",
+          "VCT",
+          "ARE",
+          "AND",
+          "ATG",
+          "AFG",
+          "AIA",
+          "VIR",
+          "ISL",
+          "IRN",
+          "ARM",
+          "ALB",
+          "AGO",
+          "ATA",
+          "ASM",
+          "ARG",
+          "AUS",
+          "AUT",
+          "ABW",
+          "IND",
+          "ALA",
+          "AZE",
+          "IRL",
+          "IDN",
+          "UKR",
+          "QAT",
+          "MOZ"
+        ]
+      },
+      "TransferConfigDto": {
+        "type": "object",
+        "properties": {
+          "transferDelay": {
+            "type": "number"
+          }
+        }
+      },
+      "CustomEmailTemplateDto": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "greetingText": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject",
+          "greetingText",
+          "template"
+        ]
+      },
+      "CustomEmailsTemplatesDto": {
+        "type": "object",
+        "properties": {
+          "successTransferEmail": {
+            "$ref": "#/components/schemas/CustomEmailTemplateDto"
+          },
+          "completeAccountEmail": {
+            "$ref": "#/components/schemas/CustomEmailTemplateDto"
+          },
+          "ecommerceProcessingOrderEmail": {
+            "$ref": "#/components/schemas/CustomEmailTemplateDto"
+          }
+        }
+      },
+      "CompanyEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "document": {
+            "type": "string"
+          },
+          "countryCode": {
+            "default": "BRA",
+            "example": "BRA",
+            "$ref": "#/components/schemas/CountryCodeEnum"
+          },
+          "theme": {
+            "type": "object"
+          },
+          "defaultOwnerAddress": {
+            "type": "string"
+          },
+          "transferConfig": {
+            "$ref": "#/components/schemas/TransferConfigDto"
+          },
+          "client": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "clientId": {
+            "type": "string"
+          },
+          "platformRoyalty": {
+            "$ref": "#/components/schemas/RoyaltyPlatformDto"
+          },
+          "customEmailsTemplates": {
+            "$ref": "#/components/schemas/CustomEmailsTemplatesDto"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "document",
+          "countryCode",
+          "theme",
+          "platformRoyalty",
+          "customEmailsTemplates"
+        ]
+      },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "itemCount": {
+            "type": "number",
+            "example": 1
+          },
+          "totalItems": {
+            "type": "number",
+            "example": 1
+          },
+          "itemsPerPage": {
+            "type": "number",
+            "example": 1
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "itemCount",
+          "itemsPerPage",
+          "currentPage"
+        ]
+      },
+      "PaginationLinksDto": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "prev": {
+            "type": "string",
+            "example": "http://example.com?page=1"
+          },
+          "next": {
+            "type": "string",
+            "example": "http://example.com?page=2"
+          },
+          "last": {
+            "type": "string",
+            "example": "http://example.com?page=3"
+          }
+        }
+      },
+      "AbstractBase": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CompanyThemeDto": {
+        "type": "object",
+        "properties": {
+          "headerLogoUrl": {
+            "type": "string"
+          },
+          "headerBackgroundColor": {
+            "type": "string"
+          },
+          "bodyCardBackgroundColor": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateCompanyProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/CompanyThemeDto"
+          }
+        }
+      },
+      "UpdateCompanyDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "description": "Id in W3blockID",
+            "format": "uuid"
+          },
+          "platformRoyalty": {
+            "$ref": "#/components/schemas/RoyaltyPlatformDto"
+          }
+        }
+      },
+      "CreateCustomEmailDto": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type": "string",
+            "enum": [
+              "successTransferEmail",
+              "completeAccountEmail",
+              "ecommerceProcessingOrderEmail"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "greetingText": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "trigger",
+          "subject",
+          "greetingText",
+          "template"
+        ]
+      },
+      "ChainId": {
+        "type": "string",
+        "enum": [
+          "1",
+          "3",
+          "4",
+          "42",
+          "1337",
+          "80001",
+          "137"
+        ]
+      },
+      "EventNotifyDto": {
+        "type": "object",
+        "properties": {
+          "blockNumber": {
+            "type": "number",
+            "example": 256
+          },
+          "blockHash": {
+            "type": "string",
+            "example": "0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7"
+          },
+          "transactionHash": {
+            "type": "string",
+            "example": "0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4"
+          },
+          "address": {
+            "type": "string",
+            "example": "0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "string",
+            "example": "0x"
+          },
+          "logIndex": {
+            "type": "number",
+            "example": 0
+          },
+          "chainId": {
+            "default": 4,
+            "example": 4,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1653579785
+          },
+          "name": {
+            "type": "string",
+            "example": "Transfer"
+          },
+          "signature": {
+            "type": "string",
+            "example": "Transfer(address,address,uint256)"
+          },
+          "topic": {
+            "type": "string",
+            "example": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+          },
+          "transactionIndex": {
+            "type": "number",
+            "example": 0
+          },
+          "args": {
+            "type": "object",
+            "example": {
+              "from": "0x0000000000000000000000000000000000000000",
+              "to": "0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc",
+              "tokenId": {
+                "_hex": "0x03",
+                "_isBigNumber": true
+              }
+            }
+          },
+          "transactionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "blockNumber",
+          "blockHash",
+          "transactionHash",
+          "address",
+          "topics",
+          "data",
+          "logIndex",
+          "chainId",
+          "timestamp",
+          "name",
+          "signature",
+          "topic",
+          "transactionIndex",
+          "args"
+        ]
+      },
+      "InviteRoyaltyContactDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "client",
+              "partner",
+              "team"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "type"
+        ]
+      },
+      "RoyaltyContactMethodType": {
+        "type": "string",
+        "enum": [
+          "invite",
+          "import"
+        ]
+      },
+      "RoyaltyContactType": {
+        "type": "string",
+        "enum": [
+          "client",
+          "partner",
+          "team"
+        ]
+      },
+      "RoyaltyContactResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "method": {
+            "example": "import",
+            "$ref": "#/components/schemas/RoyaltyContactMethodType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "type": {
+            "example": "partner",
+            "$ref": "#/components/schemas/RoyaltyContactType"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "createdAt",
+          "deletedAt",
+          "method",
+          "name",
+          "type",
+          "updatedAt"
+        ]
+      },
+      "CreateRoyaltyContactDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "client",
+              "partner",
+              "team"
+            ]
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "type",
+          "phone",
+          "address"
+        ]
+      },
+      "UpdateRoyaltyContactDTO": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "phone"
+        ]
+      },
+      "RoyaltyParticipantsDto": {
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "string"
+          },
+          "share": {
+            "type": "number",
+            "example": 2.5
+          },
+          "name": {
+            "type": "string",
+            "example": "Participant 1"
+          },
+          "payee": {
+            "type": "string",
+            "example": "0x095358452C33916513a3827a2D086da1aCEd7EE0"
+          }
+        },
+        "required": [
+          "share",
+          "name",
+          "payee"
+        ]
+      },
+      "CreateContractDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Contract Example"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "CE"
+          },
+          "chainId": {
+            "default": 4,
+            "example": 4,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://dummyimage.com/600x400/fff/000"
+          },
+          "externalLink": {
+            "type": "string",
+            "example": "https://stg.pixway.io"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoyaltyParticipantsDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "symbol",
+          "chainId",
+          "participants"
+        ]
+      },
+      "ContractStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "publishing",
+          "published",
+          "failed"
+        ]
+      },
+      "ContractActionStatus": {
+        "type": "string",
+        "enum": [
+          "created",
+          "started",
+          "success",
+          "failed",
+          "wait_event"
+        ]
+      },
+      "ContractActionType": {
+        "type": "string",
+        "enum": [
+          "factoryERC721A"
+        ]
+      },
+      "ContractActionEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "status": {
+            "default": "started",
+            "example": "started",
+            "$ref": "#/components/schemas/ContractActionStatus"
+          },
+          "type": {
+            "example": "factoryERC721A",
+            "$ref": "#/components/schemas/ContractActionType"
+          },
+          "chainId": {
+            "example": 80001,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "txHash": {
+            "type": "string"
+          },
+          "txId": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "request": {
+            "type": "object"
+          },
+          "executeAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "company",
+          "companyId",
+          "status",
+          "type",
+          "chainId",
+          "sender",
+          "metadata",
+          "request",
+          "executeAt"
+        ]
+      },
+      "RoyaltyContractEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "status": {
+            "default": "draft",
+            "example": "draft",
+            "$ref": "#/components/schemas/ContractStatus"
+          },
+          "address": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "platform": {
+            "$ref": "#/components/schemas/RoyaltyPlatformDto"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockchain": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fee": {
+            "type": "number"
+          },
+          "contractAction": {
+            "$ref": "#/components/schemas/ContractActionEntityDto"
+          },
+          "contractActionId": {
+            "type": "string"
+          },
+          "isContract": {
+            "type": "boolean"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "company",
+          "companyId",
+          "status",
+          "chainId",
+          "platform",
+          "participants",
+          "blockchain",
+          "fee",
+          "contractAction",
+          "contractActionId",
+          "isContract"
+        ]
+      },
+      "NftContractEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "royalty": {
+            "$ref": "#/components/schemas/RoyaltyContractEntityDto"
+          },
+          "royaltyId": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "externalLink": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "default": "draft",
+            "example": "draft",
+            "$ref": "#/components/schemas/ContractStatus"
+          },
+          "contractAction": {
+            "$ref": "#/components/schemas/ContractActionEntityDto"
+          },
+          "contractActionId": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "company",
+          "companyId",
+          "chainId",
+          "name",
+          "symbol",
+          "operators",
+          "status"
+        ]
+      },
+      "UpdateContractDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Contract Example"
+          },
+          "symbol": {
+            "type": "string",
+            "example": "CE"
+          },
+          "chainId": {
+            "default": 4,
+            "example": 4,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://dummyimage.com/600x400/fff/000"
+          },
+          "externalLink": {
+            "type": "string",
+            "example": "https://stg.pixway.io"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoyaltyParticipantsDto"
+            }
+          }
+        }
+      },
+      "TotalGasPriceDto": {
+        "type": "object",
+        "properties": {
+          "safe": {
+            "type": "string"
+          },
+          "proposed": {
+            "type": "string"
+          },
+          "fast": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "safe",
+          "proposed",
+          "fast"
+        ]
+      },
+      "ContractEstimateGasResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalGas": {
+            "type": "number"
+          },
+          "totalGasPrice": {
+            "$ref": "#/components/schemas/TotalGasPriceDto"
+          }
+        },
+        "required": [
+          "totalGas",
+          "totalGasPrice"
+        ]
+      },
+      "BulkTokenEditionByCollectionDto": {
+        "type": "object",
+        "properties": {
+          "tokenCollectionId": {
+            "type": "string"
+          },
+          "jobId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenCollectionId",
+          "jobId"
+        ]
+      },
+      "TokenCollectionStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "published"
+        ]
+      },
+      "CategoryEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "image"
+        ]
+      },
+      "YearConfigDTO": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "min"
+        ]
+      },
+      "GenericConfigDTO": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "object"
+          },
+          "label": {
+            "type": "string"
+          },
+          "tooltip": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "childrenType": {
+            "type": "string",
+            "enum": [
+              "SELECT",
+              "TEXTFIELD",
+              "TEXTAREA",
+              "NUMERIC_TEXTFIELD",
+              "DATE",
+              "YEAR",
+              "SINGLE_IMAGE",
+              "DIMENSIONS_2D",
+              "DIMENSIONS_3D",
+              "RADIOGROUP",
+              "BOOLEAN",
+              "LIST",
+              "COMPLEX"
+            ]
+          },
+          "range": {
+            "$ref": "#/components/schemas/YearConfigDTO"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "required",
+          "label",
+          "order",
+          "range",
+          "options"
+        ]
+      },
+      "DynamicFormItemConfigurationDTO": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SELECT",
+              "TEXTFIELD",
+              "TEXTAREA",
+              "NUMERIC_TEXTFIELD",
+              "DATE",
+              "YEAR",
+              "SINGLE_IMAGE",
+              "DIMENSIONS_2D",
+              "DIMENSIONS_3D",
+              "RADIOGROUP",
+              "BOOLEAN",
+              "LIST",
+              "COMPLEX"
+            ]
+          },
+          "config": {
+            "$ref": "#/components/schemas/GenericConfigDTO"
+          },
+          "children": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "type",
+          "config"
+        ]
+      },
+      "DynamicFormConfigurationDTO": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "$ref": "#/components/schemas/DynamicFormItemConfigurationDTO"
+          },
+          "prop2": {
+            "$ref": "#/components/schemas/DynamicFormItemConfigurationDTO"
+          }
+        }
+      },
+      "SubcategoryEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategoryEntityDto"
+          },
+          "categoryId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tokenTemplate": {
+            "$ref": "#/components/schemas/DynamicFormConfigurationDTO"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "company",
+          "companyId",
+          "category",
+          "categoryId",
+          "name",
+          "tokenTemplate"
+        ]
+      },
+      "TokenCollectionEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "default": "draft",
+            "example": "draft",
+            "$ref": "#/components/schemas/TokenCollectionStatus"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/NftContractEntityDto"
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "subcategory": {
+            "$ref": "#/components/schemas/SubcategoryEntityDto"
+          },
+          "subcategoryId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mainImage": {
+            "type": "string"
+          },
+          "tokenData": {
+            "type": "object"
+          },
+          "publishedTokenTemplate": {
+            "$ref": "#/components/schemas/DynamicFormConfigurationDTO"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "initialQuantityToMint": {
+            "type": "number"
+          },
+          "quantityMinted": {
+            "type": "number"
+          },
+          "rfids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownerAddress": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "status",
+          "contract",
+          "subcategory",
+          "name",
+          "quantity",
+          "initialQuantityToMint",
+          "quantityMinted",
+          "rfids"
+        ]
+      },
+      "TokenEditionStatusEnum": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "readyToMint",
+          "minting",
+          "minted",
+          "burning",
+          "burned",
+          "burnFailure",
+          "transferring",
+          "transferred",
+          "transferFailure"
+        ]
+      },
+      "NFTMintingStatus": {
+        "type": "string",
+        "enum": [
+          "created",
+          "started",
+          "minted",
+          "cancelled"
+        ]
+      },
+      "NFTMintingEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/NftContractEntityDto"
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "ownerAddress": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "startEdition": {
+            "type": "number"
+          },
+          "endEdition": {
+            "type": "number"
+          },
+          "batchNumber": {
+            "type": "number"
+          },
+          "status": {
+            "example": "created",
+            "$ref": "#/components/schemas/NFTMintingStatus"
+          },
+          "txHash": {
+            "type": "string"
+          },
+          "txId": {
+            "type": "string"
+          },
+          "mintedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "nfts": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "contract",
+          "contractId",
+          "contractAddress",
+          "ownerAddress",
+          "sender",
+          "chainId",
+          "startEdition",
+          "endEdition",
+          "batchNumber",
+          "status",
+          "metadata"
+        ]
+      },
+      "TokenEditionPublicDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "editionNumber": {
+            "type": "number"
+          },
+          "tokenCollection": {
+            "$ref": "#/components/schemas/TokenCollectionEntityDto"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/NftContractEntityDto"
+          },
+          "tokenCollectionId": {
+            "type": "string"
+          },
+          "rfid": {
+            "type": "string"
+          },
+          "status": {
+            "default": "draft",
+            "example": "draft",
+            "$ref": "#/components/schemas/TokenEditionStatusEnum"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "ownerAddress": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "tokenId": {
+            "type": "number"
+          },
+          "mintedHash": {
+            "type": "string"
+          },
+          "mintedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "nftMinting": {
+            "$ref": "#/components/schemas/NFTMintingEntityDto"
+          },
+          "nftMintingId": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "mintedAddress": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "editionNumber",
+          "tokenCollection",
+          "company",
+          "contractId",
+          "contract",
+          "tokenCollectionId",
+          "status",
+          "contractAddress",
+          "ownerAddress",
+          "chainId",
+          "mintedAddress"
+        ]
+      },
+      "RfidResponseDTO": {
+        "type": "object",
+        "properties": {
+          "used": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "used"
+        ]
+      },
+      "ChangeStatusReadyToMintDto": {
+        "type": "object",
+        "properties": {
+          "editionId": {
+            "example": [],
+            "description": "Array of token ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "editionId"
+        ]
+      },
+      "TokenEditionEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "editionNumber": {
+            "type": "number"
+          },
+          "tokenCollection": {
+            "$ref": "#/components/schemas/TokenCollectionEntityDto"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "contractId": {
+            "type": "string"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/NftContractEntityDto"
+          },
+          "tokenCollectionId": {
+            "type": "string"
+          },
+          "rfid": {
+            "type": "string"
+          },
+          "status": {
+            "default": "draft",
+            "example": "draft",
+            "$ref": "#/components/schemas/TokenEditionStatusEnum"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "ownerAddress": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "tokenId": {
+            "type": "number"
+          },
+          "mintedHash": {
+            "type": "string"
+          },
+          "mintedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "nftMinting": {
+            "$ref": "#/components/schemas/NFTMintingEntityDto"
+          },
+          "nftMintingId": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "editionNumber",
+          "tokenCollection",
+          "company",
+          "contractId",
+          "contract",
+          "tokenCollectionId",
+          "status",
+          "contractAddress",
+          "ownerAddress",
+          "chainId"
+        ]
+      },
+      "BurnTokensDto": {
+        "type": "object",
+        "properties": {
+          "tokens": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "tokens"
+        ]
+      },
+      "ChangeRfidDto": {
+        "type": "object",
+        "properties": {
+          "rfid": {
+            "type": "string",
+            "example": "zf4pg538qx"
+          }
+        },
+        "required": [
+          "rfid"
+        ]
+      },
+      "TransferTokensDto": {
+        "type": "object",
+        "properties": {
+          "toAddress": {
+            "type": "string"
+          },
+          "editionId": {
+            "example": [],
+            "description": "Array of token ids",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "toAddress",
+          "editionId"
+        ]
+      },
+      "TransferTokenByEditionDto": {
+        "type": "object",
+        "properties": {
+          "toAddress": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "toAddress"
+        ]
+      },
+      "NftActionStatus": {
+        "type": "string",
+        "enum": [
+          "created",
+          "started",
+          "success",
+          "failed",
+          "wait_event"
+        ]
+      },
+      "ActionMetadataDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ActionResponseDto": {
+        "type": "object",
+        "properties": {
+          "toAddress": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "status": {
+            "default": "created",
+            "example": "created",
+            "$ref": "#/components/schemas/NftActionStatus"
+          },
+          "txHash": {
+            "type": "string"
+          },
+          "chainId": {
+            "default": 80001,
+            "example": 80001,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ActionMetadataDto"
+          }
+        },
+        "required": [
+          "toAddress",
+          "sender",
+          "status",
+          "txHash",
+          "chainId",
+          "metadata"
+        ]
+      },
+      "CreateTokenCollectionDto": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "example": ""
+          },
+          "subcategoryId": {
+            "type": "string",
+            "example": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Token Collection"
+          },
+          "description": {
+            "type": "string",
+            "example": ""
+          },
+          "mainImage": {
+            "type": "string",
+            "example": "https://dummyimage.com/600x400/fff/000"
+          },
+          "tokenData": {
+            "type": "object",
+            "example": {
+              "title": "Title example"
+            }
+          },
+          "quantity": {
+            "type": "object",
+            "example": 0
+          },
+          "initialQuantityToMint": {
+            "type": "object",
+            "example": 0
+          },
+          "rfids": {
+            "example": [
+              "0ouog9xyojl",
+              "zf4pg538qx"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownerAddress": {
+            "type": "string",
+            "example": null
+          }
+        },
+        "required": [
+          "subcategoryId",
+          "name",
+          "quantity",
+          "initialQuantityToMint"
+        ]
+      },
+      "UpdateTokenCollectionDto": {
+        "type": "object",
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "example": ""
+          },
+          "subcategoryId": {
+            "type": "string",
+            "example": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Token Collection"
+          },
+          "description": {
+            "type": "string",
+            "example": ""
+          },
+          "mainImage": {
+            "type": "string",
+            "example": "https://dummyimage.com/600x400/fff/000"
+          },
+          "tokenData": {
+            "type": "object",
+            "example": {
+              "title": "Title example"
+            }
+          },
+          "quantity": {
+            "type": "object",
+            "example": 0
+          },
+          "initialQuantityToMint": {
+            "type": "object",
+            "example": 0
+          },
+          "rfids": {
+            "example": [
+              "0ouog9xyojl",
+              "zf4pg538qx"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownerAddress": {
+            "type": "string",
+            "example": null
+          }
+        }
+      },
+      "PublishTokenCollectionResponseDto": {
+        "type": "object",
+        "properties": {
+          "tokenCollection": {
+            "$ref": "#/components/schemas/TokenCollectionEntityDto"
+          },
+          "jobId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenCollection",
+          "jobId"
+        ]
+      },
+      "Map": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateSubcategoryDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tokenTemplate": {
+            "$ref": "#/components/schemas/Map"
+          }
+        },
+        "required": [
+          "categoryId",
+          "name",
+          "tokenTemplate"
+        ]
+      },
+      "UpdateSubcategoryDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tokenTemplate": {
+            "$ref": "#/components/schemas/Map"
+          }
+        }
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "image"
+        ]
+      },
+      "UpdateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "SignaturePayloadResponseDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "signature": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number"
+          },
+          "publicId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "apiKey",
+          "signature",
+          "timestamp",
+          "publicId"
+        ]
+      },
+      "JobStatusesEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "finished",
+          "failed"
+        ]
+      },
+      "JobEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "companyId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "default": "pending",
+            "example": "pending",
+            "$ref": "#/components/schemas/JobStatusesEnum"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "data",
+          "description",
+          "status"
+        ]
+      },
+      "TokenEditionInformationBaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "chainId": {
+            "default": 4,
+            "example": 4,
+            "$ref": "#/components/schemas/ChainId"
+          },
+          "contractAddress": {
+            "type": "string",
+            "example": "0x0000000000000000000000000000000000000000"
+          },
+          "editionNumber": {
+            "type": "number",
+            "example": 1
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "chainId",
+          "contractAddress",
+          "editionNumber",
+          "isAvailable"
+        ]
+      },
+      "TokenPayloadAttributeDto": {
+        "type": "object",
+        "properties": {
+          "trait_type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "trait_type",
+          "value"
+        ]
+      },
+      "TokenPayloadDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "number"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenPayloadAttributeDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "image",
+          "description",
+          "id",
+          "attributes"
+        ]
+      },
+      "CompanyPublicDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/CompanyThemeDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "theme"
+        ]
+      },
+      "PublicDataGroupDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "subcategoryId": {
+            "type": "string"
+          },
+          "subcategoryName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "categoryId",
+          "categoryName",
+          "subcategoryId",
+          "subcategoryName"
+        ]
+      },
+      "PublicDataInformationDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "mainImage": {
+            "type": "string"
+          },
+          "contractName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "contractName"
+        ]
+      },
+      "PublicDataDynamicInformationDto": {
+        "type": "object",
+        "properties": {
+          "tokenData": {
+            "type": "object"
+          },
+          "publishedTokenTemplate": {
+            "$ref": "#/components/schemas/DynamicFormConfigurationDTO"
+          }
+        }
+      },
+      "PublicDataEditionDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "currentNumber": {
+            "type": "number"
+          },
+          "rfid": {
+            "type": "string"
+          },
+          "isMultiple": {
+            "type": "boolean"
+          },
+          "mintedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "mintedHash": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "total",
+          "currentNumber",
+          "rfid",
+          "isMultiple"
+        ]
+      },
+      "PublicDataTokenDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "tokenId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "address",
+          "chainId"
+        ]
+      },
+      "PublicPageDataDto": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "$ref": "#/components/schemas/CompanyPublicDataDto"
+          },
+          "group": {
+            "$ref": "#/components/schemas/PublicDataGroupDto"
+          },
+          "information": {
+            "$ref": "#/components/schemas/PublicDataInformationDto"
+          },
+          "dynamicInformation": {
+            "$ref": "#/components/schemas/PublicDataDynamicInformationDto"
+          },
+          "edition": {
+            "$ref": "#/components/schemas/PublicDataEditionDto"
+          },
+          "token": {
+            "$ref": "#/components/schemas/PublicDataTokenDto"
+          },
+          "isMinted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "company",
+          "group",
+          "information",
+          "dynamicInformation",
+          "edition",
+          "token",
+          "isMinted"
+        ]
+      },
+      "ContractBcDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "external_link": {
+            "type": "string"
+          },
+          "seller_fee_basis_points": {
+            "type": "number"
+          },
+          "fee_recipient": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "NFTsMetadataResponseDto": {
+        "type": "object",
+        "properties": {
+          "prop1": {
+            "type": "object"
+          },
+          "prop2": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "prop1",
+          "prop2"
+        ]
+      },
+      "CountDto": {
+        "type": "object",
+        "properties": {
+          "started": {
+            "type": "number"
+          },
+          "pending": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "started",
+          "pending"
+        ]
+      },
+      "CountTransactionsResponseDto": {
+        "type": "object",
+        "properties": {
+          "mint": {
+            "$ref": "#/components/schemas/CountDto"
+          },
+          "action": {
+            "$ref": "#/components/schemas/CountDto"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/CountDto"
+          },
+          "total": {
+            "$ref": "#/components/schemas/CountDto"
+          }
+        },
+        "required": [
+          "mint",
+          "action",
+          "contract",
+          "total"
+        ]
+      },
+      "CreateContactDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "email"
+        ]
+      },
+      "ContactEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "example": "anymail@email.com"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "email"
+        ]
+      }
+    }
+  }
+}
