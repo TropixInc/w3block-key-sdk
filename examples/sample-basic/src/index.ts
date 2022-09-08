@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PixChain, ERC721Sample } from '@tropixinc/pixwayid-sdk';
+import { PixChain, ERC721Sample } from '@tropixinc/w3block-key-sdk';
 
 async function main() {
   const address = '0x0000000000000000000000000000000000000000';
