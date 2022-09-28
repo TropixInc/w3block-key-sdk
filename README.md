@@ -1,4 +1,4 @@
-# Pixway ID SDK 
+# W3block Key SDK 
 ## Installation
 
 Create or edit the `.npmrc` file and enter the GitHub registry address
@@ -9,17 +9,17 @@ Create or edit the `.npmrc` file and enter the GitHub registry address
 
 Install the package with npm
 ```
-npm install @tropixinc/pixwayid-sdk --save
+npm install @w3block/sdk-key --save
 ```
 
 Use the package in the project
 
 ```js
 import 'dotenv/config'
-import pixwayidSdk from '@tropixinc/pixwayid-sdk'
+import Api from '@tropixinc/w3block-key-sdk'
 
 async function main() {
-  
+
 }
 
 main().then(() => {
