@@ -10,7 +10,6 @@ async function main() {
   });
   const contracts = await pixchain.contracts.getStandards();
 
-  console.log('contracts', contracts);
   const contractERC721Sample = contracts.find((contract) => contract.uniqueName === 'ERC721Sample');
   if (contractERC721Sample?.lastContractSourceId) {
     const deploy = await pixchain.deploy

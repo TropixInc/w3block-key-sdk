@@ -16,10 +16,18 @@ Use the package in the project
 
 ```js
 import 'dotenv/config'
-import Api from '@tropixinc/w3block-key-sdk'
+import { W3blockKeySDK } from '@tropixinc/w3block-key-sdk'
 
 async function main() {
-
+  const sdk = new W3blockKeySDK({
+    credential: {
+      authToken: 'string';
+      refreshToken: 'string';
+      tenantId: 'string';
+    },
+    baseURL: 'http://localhost:6001',
+    autoRefresh: false
+  });
 }
 
 main().then(() => {
