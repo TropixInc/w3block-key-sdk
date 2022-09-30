@@ -21,6 +21,12 @@ jobs:
           watch-files: |
             package.json
             .env.example
+            Dockerfile
             .nvmrc
             tsconfig.json
-
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_CH_BACKEND }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '@{{EVENT_PAYLOAD.pull_request.user.login}} mandou uma nova PR! [{{ EVENT_PAYLOAD.pull_request.title }}]({{ EVENT_PAYLOAD.pull_request.url }}).'
