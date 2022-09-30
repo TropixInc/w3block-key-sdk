@@ -134,10 +134,24 @@ export interface RoyaltyEligibleEntityDto {
   updatedAt?: string;
 }
 
-export interface UpdateRoyaltyEligibleDto {
-  active?: boolean;
-  displayName?: string;
+export interface RoyaltyEligibleWithWalletsDto {
+  id: string;
+  companyId: string;
+  active: boolean;
+  displayName: string;
   userId?: string;
+  externalContact?: ExternalContactEntityDto;
+  externalContactId?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+  walletAddress?: string;
 }
 
 export interface AlterRoyaltyEligibleDto {
@@ -1018,6 +1032,26 @@ export interface ActionResponseDto {
   metadata: ActionMetadataDto;
 }
 
+export interface CollectionSearchDto {
+  /** @example 0x389dd295657a6fb2336aa33e40aeb8fb81f97fe4 */
+  contractAddress: string;
+
+  /** @example 80001 */
+  chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
+
+  /** @example 1 */
+  startTokenId?: number;
+
+  /** @example 100 */
+  endTokenId?: number;
+}
+
+export interface CheckCollectionTokenHolderDto {
+  /** @example ["0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79","0x39926ceceb3cc78ab2cced96f217df3e7bed48c1"] */
+  walletAddresses: string[];
+  collections: CollectionSearchDto[];
+}
+
 export interface CreateTokenCollectionDto {
   /** @example  */
   contractId?: string;
@@ -1608,6 +1642,7 @@ export namespace CompanyId {
       id?: string[];
       userIds?: string[];
       externalContactIds?: string[];
+      wallets?: boolean;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1640,22 +1675,6 @@ export namespace CompanyId {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = RoyaltyEligibleEntityDto;
-  }
-  /**
-   * No description
-   * @tags Contracts - Royalty Eligible
-   * @name Update2
-   * @request PATCH:/{companyId}/contracts/royalty-eligible/{id}
-   * @originalName update
-   * @duplicate
-   * @secure
-   */
-  export namespace Update2 {
-    export type RequestParams = { companyId: string; id: string };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateRoyaltyEligibleDto;
     export type RequestHeaders = {};
     export type ResponseBody = RoyaltyEligibleEntityDto;
   }
@@ -1734,13 +1753,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Contracts
-   * @name Update3
+   * @name Update2
    * @request PATCH:/{companyId}/contracts/{id}
    * @originalName update
    * @duplicate
    * @secure
    */
-  export namespace Update3 {
+  export namespace Update2 {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateContractDto;
@@ -2031,8 +2050,9 @@ export namespace CompanyId {
       search?: string;
       sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
-      status?: 'draft' | 'published';
+      status?: ('draft' | 'published')[];
       contractId?: string;
+      subcategoryIds?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2071,13 +2091,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Collections
-   * @name Update4
+   * @name Update3
    * @request PUT:/{companyId}/token-collections/{id}
    * @originalName update
    * @duplicate
    * @secure
    */
-  export namespace Update4 {
+  export namespace Update3 {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateTokenCollectionDto;
@@ -2163,13 +2183,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Subcategories
-   * @name Update5
+   * @name Update4
    * @request PATCH:/{companyId}/subcategories/{id}
    * @originalName update
    * @duplicate
    * @secure
    */
-  export namespace Update5 {
+  export namespace Update4 {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateSubcategoryDto;
@@ -2284,6 +2304,23 @@ export namespace Blockchain {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+}
+
+export namespace Tokens {
+  /**
+   * No description
+   * @tags Tokens
+   * @name CheckCollectionTokenHolder
+   * @request PATCH:/tokens/check-collection-token-holder
+   * @secure
+   */
+  export namespace CheckCollectionTokenHolder {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CheckCollectionTokenHolderDto;
     export type RequestHeaders = {};
     export type ResponseBody = any;
   }
@@ -2938,7 +2975,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title offpix-backend
- * @version 0.3.9
+ * @version 0.4.1
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -3273,6 +3310,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         id?: string[];
         userIds?: string[];
         externalContactIds?: string[];
+        wallets?: boolean;
       },
       params: RequestParams = {},
     ) =>
@@ -3318,27 +3356,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/${companyId}/contracts/royalty-eligible/${id}`,
         method: 'GET',
         secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Contracts - Royalty Eligible
-     * @name Update2
-     * @request PATCH:/{companyId}/contracts/royalty-eligible/{id}
-     * @originalName update
-     * @duplicate
-     * @secure
-     */
-    update2: (companyId: string, id: string, data: UpdateRoyaltyEligibleDto, params: RequestParams = {}) =>
-      this.request<RoyaltyEligibleEntityDto, void>({
-        path: `/${companyId}/contracts/royalty-eligible/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
@@ -3441,13 +3458,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Contracts
-     * @name Update3
+     * @name Update2
      * @request PATCH:/{companyId}/contracts/{id}
      * @originalName update
      * @duplicate
      * @secure
      */
-    update3: (id: string, companyId: string, data: UpdateContractDto, params: RequestParams = {}) =>
+    update2: (id: string, companyId: string, data: UpdateContractDto, params: RequestParams = {}) =>
       this.request<NftContractEntityDto, void>({
         path: `/${companyId}/contracts/${id}`,
         method: 'PATCH',
@@ -3823,8 +3840,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
-        status?: 'draft' | 'published';
+        status?: ('draft' | 'published')[];
         contractId?: string;
+        subcategoryIds?: string[];
       },
       params: RequestParams = {},
     ) =>
@@ -3884,13 +3902,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Collections
-     * @name Update4
+     * @name Update3
      * @request PUT:/{companyId}/token-collections/{id}
      * @originalName update
      * @duplicate
      * @secure
      */
-    update4: (companyId: string, id: string, data: UpdateTokenCollectionDto, params: RequestParams = {}) =>
+    update3: (companyId: string, id: string, data: UpdateTokenCollectionDto, params: RequestParams = {}) =>
       this.request<TokenCollectionEntityDto, void>({
         path: `/${companyId}/token-collections/${id}`,
         method: 'PUT',
@@ -3999,13 +4017,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Subcategories
-     * @name Update5
+     * @name Update4
      * @request PATCH:/{companyId}/subcategories/{id}
      * @originalName update
      * @duplicate
      * @secure
      */
-    update5: (id: string, companyId: string, data: UpdateSubcategoryDto, params: RequestParams = {}) =>
+    update4: (id: string, companyId: string, data: UpdateSubcategoryDto, params: RequestParams = {}) =>
       this.request<SubcategoryEntityDto, void>({
         path: `/${companyId}/subcategories/${id}`,
         method: 'PATCH',
@@ -4138,6 +4156,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/blockchain/gas-cost/${companyId}`,
         method: 'GET',
         secure: true,
+        ...params,
+      }),
+  };
+  tokens = {
+    /**
+     * No description
+     *
+     * @tags Tokens
+     * @name CheckCollectionTokenHolder
+     * @request PATCH:/tokens/check-collection-token-holder
+     * @secure
+     */
+    checkCollectionTokenHolder: (data: CheckCollectionTokenHolderDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/tokens/check-collection-token-holder`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
