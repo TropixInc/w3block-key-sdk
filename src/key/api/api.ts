@@ -26,44 +26,192 @@ export interface AccountCompleteRetryDto {
   companyId: string;
 }
 
-export interface ByHostDto {
-  /** @example tropix.pixway.io */
-  host: string;
+export interface InviteExternalContactDto {
+  name: string;
+  email?: string;
+  phone?: string;
+  walletAddress: string;
+  royaltyEligible: boolean;
 }
 
-export interface CreateCompanyHostDto {
-  /** @example tropix.pixway.io */
-  host: string;
+export enum ExternalContactMethodType {
+  Invite = 'invite',
+  Import = 'import',
+}
+
+export interface ExternalContactEntityDto {
+  id: string;
   companyId: string;
+  active: boolean;
+  name: string;
+  userId?: string;
+  walletAddress: string;
+  email?: string;
+  description?: string;
+
+  /** @example import */
+  method: ExternalContactMethodType;
+  address?: string;
+  phone?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
 }
 
-export interface UpdateCompanyHostDto {
-  /** @example tropix.pixway.io */
-  host?: string;
-  companyId?: string;
+export interface PaginationMetaDto {
+  /** @example 1 */
+  itemCount: number;
+
+  /** @example 1 */
+  totalItems?: number;
+
+  /** @example 1 */
+  itemsPerPage: number;
+
+  /** @example 1 */
+  totalPages?: number;
+
+  /** @example 1 */
+  currentPage: number;
 }
 
-export interface RoyaltyPlatformDto {
-  /** @example Pixway */
+export interface PaginationLinksDto {
+  /** @example http://example.com?page=1 */
+  first?: string;
+
+  /** @example http://example.com?page=1 */
+  prev?: string;
+
+  /** @example http://example.com?page=2 */
+  next?: string;
+
+  /** @example http://example.com?page=3 */
+  last?: string;
+}
+
+export interface AbstractBase {
+  items: JobEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface UpdateExternalContactDto {
   name?: string;
+  email?: string;
+  phone?: string;
+  walletAddress?: string;
+}
+
+export interface CreateRoyaltyEligibleDto {
+  active: boolean;
+  displayName: string;
+  userId?: string;
+  externalContactId?: string;
+}
+
+export interface RoyaltyEligibleEntityDto {
+  id: string;
+  companyId: string;
+  active: boolean;
+  displayName: string;
+  userId?: string;
+  externalContact?: ExternalContactEntityDto;
+  externalContactId?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+}
+
+export interface RoyaltyEligibleWithWalletsDto {
+  id: string;
+  companyId: string;
+  active: boolean;
+  displayName: string;
+  userId?: string;
+  externalContact?: ExternalContactEntityDto;
+  externalContactId?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+  walletAddress?: string;
+}
+
+export interface AlterRoyaltyEligibleDto {
+  active: boolean;
+  userId?: string;
+  externalContactId?: string;
+}
+
+export interface RoyaltyParticipantsDto {
+  /** @example null */
+  contactId?: string;
 
   /** @example 2.5 */
-  share?: number;
+  share: number;
 
-  /** @example 0xbc99eb9e5a05c72ca34c3554d12266e7a48e63b7 */
-  payee?: string;
+  /** @example Participant 1 */
+  name: string;
+
+  /** @example 0x095358452C33916513a3827a2D086da1aCEd7EE0 */
+  payee: string;
 }
 
-export interface CreateCompanyDto {
-  /**
-   * Id in W3blockID
-   * @format uuid
-   */
-  tenantId: string;
+export enum ChainId {
+  Mainnet = 1,
+  Ropsten = 3,
+  Rinkeby = 4,
+  Kovan = 42,
+  Local = 1337,
+  Mumbai = 80001,
+  Polygon = 137,
+}
 
-  /** @example tropix.pixway.io */
-  host: string;
-  platformRoyalty?: RoyaltyPlatformDto;
+export enum ContractFeature {
+  AdminMinter = 'admin:minter',
+  AdminBurner = 'admin:burner',
+  AdminMover = 'admin:mover',
+  UserBurner = 'user:burner',
+  UserMover = 'user:mover',
+}
+
+export interface CreateContractDto {
+  /** @example Contract Example */
+  name: string;
+
+  /** @example CE */
+  symbol: string;
+
+  /** @example 4 */
+  chainId: ChainId;
+  description?: string;
+
+  /** @example https://dummyimage.com/600x400/fff/000 */
+  image?: string;
+
+  /** @example https://stg.pixway.io */
+  externalLink?: string;
+  participants: RoyaltyParticipantsDto[];
+
+  /** @example ["admin:mover","admin:minter","admin:burner","user:burner","user:mover"] */
+  features?: ContractFeature[];
 }
 
 export enum CountryCodeEnum {
@@ -323,6 +471,12 @@ export interface TransferConfigDto {
   transferDelay?: number;
 }
 
+export interface RoyaltyPlatformDto {
+  payee: string;
+  share: number;
+  name?: string;
+}
+
 export interface CustomEmailTemplateDto {
   subject: string;
   greetingText: string;
@@ -360,214 +514,6 @@ export interface CompanyEntityDto {
   updatedAt?: string;
 }
 
-export interface PaginationMetaDto {
-  /** @example 1 */
-  itemCount: number;
-
-  /** @example 1 */
-  totalItems?: number;
-
-  /** @example 1 */
-  itemsPerPage: number;
-
-  /** @example 1 */
-  totalPages?: number;
-
-  /** @example 1 */
-  currentPage: number;
-}
-
-export interface PaginationLinksDto {
-  /** @example http://example.com?page=1 */
-  first?: string;
-
-  /** @example http://example.com?page=1 */
-  prev?: string;
-
-  /** @example http://example.com?page=2 */
-  next?: string;
-
-  /** @example http://example.com?page=3 */
-  last?: string;
-}
-
-export interface AbstractBase {
-  items: JobEntityDto[];
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-}
-
-export interface CompanyThemeDto {
-  headerLogoUrl?: string;
-  headerBackgroundColor?: string;
-  bodyCardBackgroundColor?: string;
-}
-
-export interface UpdateCompanyProfileDto {
-  name?: string;
-  theme?: CompanyThemeDto;
-}
-
-export interface UpdateCompanyDto {
-  /**
-   * Id in W3blockID
-   * @format uuid
-   */
-  tenantId?: string;
-  platformRoyalty?: RoyaltyPlatformDto;
-}
-
-export interface CreateCustomEmailDto {
-  trigger: 'successTransferEmail' | 'completeAccountEmail' | 'ecommerceProcessingOrderEmail';
-  subject: string;
-  greetingText: string;
-  template: string;
-}
-
-export enum ChainId {
-  Mainnet = 1,
-  Ropsten = 3,
-  Rinkeby = 4,
-  Kovan = 42,
-  Local = 1337,
-  Mumbai = 80001,
-  Polygon = 137,
-}
-
-export interface EventNotifyDto {
-  /** @example 256 */
-  blockNumber: number;
-
-  /** @example 0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7 */
-  blockHash: string;
-
-  /** @example 0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4 */
-  transactionHash: string;
-
-  /** @example 0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79 */
-  address: string;
-  topics: string[];
-
-  /** @example 0x */
-  data: string;
-
-  /** @example 0 */
-  logIndex: number;
-
-  /** @example 4 */
-  chainId: ChainId;
-
-  /** @example 1653579785 */
-  timestamp: number;
-
-  /** @example Transfer */
-  name: string;
-
-  /** @example Transfer(address,address,uint256) */
-  signature: string;
-
-  /** @example 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef */
-  topic: string;
-
-  /** @example 0 */
-  transactionIndex: number;
-
-  /** @example {"from":"0x0000000000000000000000000000000000000000","to":"0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc","tokenId":{"_hex":"0x03","_isBigNumber":true}} */
-  args: object;
-  transactionId?: string;
-}
-
-export interface InviteRoyaltyContactDto {
-  name: string;
-  email: string;
-  type: 'client' | 'partner' | 'team';
-}
-
-export enum RoyaltyContactMethodType {
-  Invite = 'invite',
-  Import = 'import',
-}
-
-export enum RoyaltyContactType {
-  Client = 'client',
-  Partner = 'partner',
-  Team = 'team',
-}
-
-export interface RoyaltyContactResponseDto {
-  id: string;
-
-  /** @example 0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188 */
-  address?: string;
-  companyId: string;
-
-  /** @format date-time */
-  createdAt: string;
-
-  /** @format date-time */
-  deletedAt: string;
-  description?: string;
-  email?: string;
-
-  /** @example import */
-  method: RoyaltyContactMethodType;
-  name: string;
-  phone?: string;
-
-  /** @example partner */
-  type: RoyaltyContactType;
-
-  /** @format date-time */
-  updatedAt: string;
-  userId?: string;
-  user?: object;
-}
-
-export interface CreateRoyaltyContactDTO {
-  name: string;
-  email: string;
-  type: 'client' | 'partner' | 'team';
-  phone: string;
-  address: string;
-}
-
-export interface UpdateRoyaltyContactDTO {
-  phone: string;
-  description?: string;
-}
-
-export interface RoyaltyParticipantsDto {
-  contactId?: string;
-
-  /** @example 2.5 */
-  share: number;
-
-  /** @example Participant 1 */
-  name: string;
-
-  /** @example 0x095358452C33916513a3827a2D086da1aCEd7EE0 */
-  payee: string;
-}
-
-export interface CreateContractDto {
-  /** @example Contract Example */
-  name: string;
-
-  /** @example CE */
-  symbol: string;
-
-  /** @example 4 */
-  chainId: ChainId;
-  description?: string;
-
-  /** @example https://dummyimage.com/600x400/fff/000 */
-  image?: string;
-
-  /** @example https://stg.pixway.io */
-  externalLink?: string;
-  participants: RoyaltyParticipantsDto[];
-}
-
 export enum ContractStatus {
   Draft = 'draft',
   Publishing = 'publishing',
@@ -585,6 +531,7 @@ export enum ContractActionStatus {
 
 export enum ContractActionType {
   FactoryERC721A = 'factoryERC721A',
+  GrantRole = 'grantRole',
 }
 
 export interface ContractActionEntityDto {
@@ -660,11 +607,13 @@ export interface NftContractEntityDto {
   image?: string;
   externalLink?: string;
   operators: string[];
+  roles: any[][];
 
   /** @example draft */
   status: ContractStatus;
   contractAction?: ContractActionEntityDto;
   contractActionId?: string;
+  features: ContractFeature[];
 
   /** @format date-time */
   deletedAt?: string;
@@ -674,6 +623,29 @@ export interface NftContractEntityDto {
 
   /** @format date-time */
   updatedAt?: string;
+}
+
+export enum ContractOperatorRole {
+  Mover = 'mover',
+  Minter = 'minter',
+}
+
+export interface HasRoleDto {
+  /** @example 0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188 */
+  address: string;
+
+  /** @example 4 */
+  chainId: ChainId;
+
+  /** @example mover */
+  role: ContractOperatorRole;
+
+  /** @example 0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188 */
+  contractAddress: string;
+}
+
+export interface HasRoleResponseDto {
+  hasRole: boolean;
 }
 
 export interface UpdateContractDto {
@@ -693,6 +665,9 @@ export interface UpdateContractDto {
   /** @example https://stg.pixway.io */
   externalLink?: string;
   participants?: RoyaltyParticipantsDto[];
+
+  /** @example ["admin:mover","admin:minter","admin:burner","user:burner","user:mover"] */
+  features?: ContractFeature[];
 }
 
 export interface TotalGasPriceDto {
@@ -704,6 +679,49 @@ export interface TotalGasPriceDto {
 export interface ContractEstimateGasResponseDto {
   totalGas: number;
   totalGasPrice: TotalGasPriceDto;
+}
+
+export interface EventNotifyDto {
+  /** @example 256 */
+  blockNumber: number;
+
+  /** @example 0x75a3c22ef6e394a496fb7cdb16c9c5a975d6c4950f931a9df9bff38a2a9371a7 */
+  blockHash: string;
+
+  /** @example 0x9882f164a13ad7cfaeb682d36415f6bd8d0348f7f738b85c7668665fa00956c4 */
+  transactionHash: string;
+
+  /** @example 0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79 */
+  address: string;
+  topics: string[];
+
+  /** @example 0x */
+  data: string;
+
+  /** @example 0 */
+  logIndex: number;
+
+  /** @example 4 */
+  chainId: ChainId;
+
+  /** @example 1653579785 */
+  timestamp: number;
+
+  /** @example Transfer */
+  name: string;
+
+  /** @example Transfer(address,address,uint256) */
+  signature: string;
+
+  /** @example 0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef */
+  topic: string;
+
+  /** @example 0 */
+  transactionIndex: number;
+
+  /** @example {"from":"0x0000000000000000000000000000000000000000","to":"0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc","tokenId":{"_hex":"0x03","_isBigNumber":true}} */
+  args: object;
+  transactionId?: string;
 }
 
 export interface BulkTokenEditionByCollectionDto {
@@ -753,8 +771,9 @@ export interface GenericConfigDTO {
     | 'BOOLEAN'
     | 'LIST'
     | 'COMPLEX';
-  range: YearConfigDTO;
-  options: string[];
+  range?: YearConfigDTO;
+  options?: string[];
+  float?: boolean;
 }
 
 export interface DynamicFormItemConfigurationDTO {
@@ -798,6 +817,7 @@ export interface SubcategoryEntityDto {
 
   /** @format date-time */
   updatedAt?: string;
+  certificateTemplate?: string;
 }
 
 export interface TokenCollectionEntityDto {
@@ -849,6 +869,7 @@ export enum NFTMintingStatus {
   Started = 'started',
   Minted = 'minted',
   Cancelled = 'cancelled',
+  Failed = 'failed',
 }
 
 export interface NFTMintingEntityDto {
@@ -1011,6 +1032,26 @@ export interface ActionResponseDto {
   metadata: ActionMetadataDto;
 }
 
+export interface CollectionSearchDto {
+  /** @example 0x389dd295657a6fb2336aa33e40aeb8fb81f97fe4 */
+  contractAddress: string;
+
+  /** @example 80001 */
+  chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
+
+  /** @example 1 */
+  startTokenId?: number;
+
+  /** @example 100 */
+  endTokenId?: number;
+}
+
+export interface CheckCollectionTokenHolderDto {
+  /** @example ["0x82dbB0A14F79f50c8f8e0D50FC9F1ef30Aeb6C79","0x39926ceceb3cc78ab2cced96f217df3e7bed48c1"] */
+  walletAddresses: string[];
+  collections: CollectionSearchDto[];
+}
+
 export interface CreateTokenCollectionDto {
   /** @example  */
   contractId?: string;
@@ -1086,12 +1127,14 @@ export interface CreateSubcategoryDto {
   categoryId: string;
   name: string;
   tokenTemplate: Map;
+  certificateTemplate?: string;
 }
 
 export interface UpdateSubcategoryDto {
   categoryId?: string;
   name?: string;
   tokenTemplate?: Map;
+  certificateTemplate?: string;
 }
 
 export interface CreateCategoryDto {
@@ -1109,6 +1152,62 @@ export interface SignaturePayloadResponseDto {
   signature: string;
   timestamp: number;
   publicId: string;
+}
+
+export interface ByHostDto {
+  /** @example tropix.pixway.io */
+  host: string;
+}
+
+export interface CreateCompanyHostDto {
+  /** @example tropix.pixway.io */
+  host: string;
+  companyId: string;
+}
+
+export interface UpdateCompanyHostDto {
+  /** @example tropix.pixway.io */
+  host?: string;
+  companyId?: string;
+}
+
+export interface CreateCompanyDto {
+  /**
+   * Id in W3blockID
+   * @format uuid
+   */
+  tenantId: string;
+
+  /** @example tropix.pixway.io */
+  host: string;
+  platformRoyalty?: RoyaltyPlatformDto;
+}
+
+export interface CompanyThemeDto {
+  headerLogoUrl?: string;
+  headerBackgroundColor?: string;
+  bodyCardBackgroundColor?: string;
+}
+
+export interface UpdateCompanyProfileDto {
+  name?: string;
+  theme?: CompanyThemeDto;
+}
+
+export interface UpdateCompanyDto {
+  /**
+   * Id in W3blockID
+   * @format uuid
+   */
+  tenantId?: string;
+  platformRoyalty?: RoyaltyPlatformDto;
+}
+
+export interface CreateCustomEmailDto {
+  trigger: 'successTransferEmail' | 'completeAccountEmail' | 'ecommerceProcessingOrderEmail';
+  subject: string;
+  greetingText: string;
+  template: string;
 }
 
 export enum JobStatusesEnum {
@@ -1148,6 +1247,9 @@ export interface TokenEditionInformationBaseResponseDto {
 
   /** @example true */
   isAvailable: boolean;
+
+  /** @format uuid */
+  id: string;
 }
 
 export interface TokenPayloadAttributeDto {
@@ -1210,6 +1312,7 @@ export interface PublicPageDataDto {
   group: PublicDataGroupDto;
   information: PublicDataInformationDto;
   dynamicInformation: PublicDataDynamicInformationDto;
+  certificateTemplate: string;
   edition: PublicDataEditionDto;
   token: PublicDataTokenDto;
   isMinted: boolean;
@@ -1240,6 +1343,11 @@ export interface CountTransactionsResponseDto {
   action: CountDto;
   contract: CountDto;
   total: CountDto;
+}
+
+export enum MetadataHistorySortBy {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
 }
 
 export interface CreateContactDto {
@@ -1399,346 +1507,56 @@ export namespace Users {
   }
 }
 
-export namespace Companies {
+export namespace Auth {
   /**
    * No description
-   * @tags Companies/Hosts
-   * @name GetCompanyByHost
-   * @request GET:/companies/hosts/by-host
-   * @secure
+   * @tags Authentication
+   * @name VerifySignUp
+   * @request GET:/auth/verify-sign-up
    */
-  export namespace GetCompanyByHost {
+  export namespace VerifySignUp {
     export type RequestParams = {};
-    export type RequestQuery = { host: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name ToggleMainHost
-   * @request PUT:/companies/hosts/toggle/is-main
-   * @secure
-   */
-  export namespace ToggleMainHost {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = ByHostDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name Create
-   * @request POST:/companies/hosts
-   * @secure
-   */
-  export namespace Create {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = CreateCompanyHostDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name FindAll
-   * @request GET:/companies/hosts
-   * @secure
-   */
-  export namespace FindAll {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: 'ASC' | 'DESC';
-    };
+    export type RequestQuery = { email: string; token: string };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name FindOne
-   * @request GET:/companies/hosts/{id}
-   * @secure
-   */
-  export namespace FindOne {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name Update
-   * @request PUT:/companies/hosts/{id}
-   * @secure
-   */
-  export namespace Update {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateCompanyHostDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies/Hosts
-   * @name Remove
-   * @request DELETE:/companies/hosts/{id}
-   * @secure
-   */
-  export namespace Remove {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name Create2
-   * @request POST:/companies
-   * @originalName create
-   * @duplicate
-   * @secure
-   */
-  export namespace Create2 {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = CreateCompanyDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = CompanyEntityDto;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name FindAll2
-   * @request GET:/companies
-   * @originalName findAll
-   * @duplicate
-   * @secure
-   */
-  export namespace FindAll2 {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: 'ASC' | 'DESC';
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = AbstractBase;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name FindOne2
-   * @request GET:/companies/{id}
-   * @originalName findOne
-   * @duplicate
-   * @secure
-   */
-  export namespace FindOne2 {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CompanyEntityDto;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name Update2
-   * @request PATCH:/companies/{id}
-   * @originalName update
-   * @duplicate
-   * @secure
-   */
-  export namespace Update2 {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateCompanyDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = CompanyEntityDto;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name Remove2
-   * @request DELETE:/companies/{id}
-   * @originalName remove
-   * @duplicate
-   * @secure
-   */
-  export namespace Remove2 {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name UpdateProfile
-   * @request PATCH:/companies/profile/{id}
-   * @secure
-   */
-  export namespace UpdateProfile {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = UpdateCompanyProfileDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = CompanyEntityDto;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name ResyncCloneContracts
-   * @request POST:/companies/resync-clone-contract
-   * @secure
-   */
-  export namespace ResyncCloneContracts {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name CreateOrUpdateEmail
-   * @request POST:/companies/{id}/emails
-   * @secure
-   */
-  export namespace CreateOrUpdateEmail {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = CreateCustomEmailDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Companies
-   * @name FindEmails
-   * @request GET:/companies/{id}/emails
-   * @secure
-   */
-  export namespace FindEmails {
-    export type RequestParams = { id: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-}
-
-export namespace Blockchain {
-  /**
-   * No description
-   * @tags Blockchain
-   * @name ReceiveEventWebhook
-   * @request POST:/blockchain/webhook/event/{companyId}
-   */
-  export namespace ReceiveEventWebhook {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = EventNotifyDto;
-    export type RequestHeaders = { 'x-pixchain-signature': string };
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Blockchain
-   * @name ReceiveTransactionWebhook
-   * @request POST:/blockchain/webhook/transaction/{companyId}
-   */
-  export namespace ReceiveTransactionWebhook {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = { 'x-pixchain-signature': string };
-    export type ResponseBody = any;
-  }
-  /**
-   * No description
-   * @tags Blockchain
-   * @name GetBalance
-   * @request GET:/blockchain/balance/{address}/{chainId}
-   * @secure
-   */
-  export namespace GetBalance {
-    export type RequestParams = { address: string; chainId: ChainId };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Blockchain
-   * @name GetGas
-   * @request GET:/blockchain/gas-cost/{companyId}
-   * @secure
-   */
-  export namespace GetGas {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
   }
 }
 
 export namespace CompanyId {
   /**
    * No description
-   * @tags Contracts/Contacts
+   * @tags External contacts
    * @name Invite
-   * @request POST:/{companyId}/contracts/contacts/invite
+   * @request POST:/{companyId}/external-contacts/invite
    * @secure
    */
   export namespace Invite {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
-    export type RequestBody = InviteRoyaltyContactDto;
+    export type RequestBody = InviteExternalContactDto;
     export type RequestHeaders = {};
-    export type ResponseBody = RoyaltyContactResponseDto;
+    export type ResponseBody = ExternalContactEntityDto;
   }
   /**
    * No description
-   * @tags Contracts/Contacts
+   * @tags External contacts
    * @name Create
-   * @request POST:/{companyId}/contracts/contacts/import
+   * @request POST:/{companyId}/external-contacts/import
    * @secure
    */
   export namespace Create {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
-    export type RequestBody = CreateRoyaltyContactDTO;
+    export type RequestBody = InviteExternalContactDto;
     export type RequestHeaders = {};
-    export type ResponseBody = RoyaltyContactResponseDto;
+    export type ResponseBody = ExternalContactEntityDto;
   }
   /**
    * No description
-   * @tags Contracts/Contacts
+   * @tags External contacts
    * @name FindAll
-   * @request GET:/{companyId}/contracts/contacts
+   * @request GET:/{companyId}/external-contacts
    * @secure
    */
   export namespace FindAll {
@@ -1749,7 +1567,8 @@ export namespace CompanyId {
       search?: string;
       sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
-      type?: 'client' | 'partner' | 'team';
+      id?: string[];
+      userIds?: string[];
       minDate?: string;
       maxDate?: string;
     };
@@ -1759,9 +1578,9 @@ export namespace CompanyId {
   }
   /**
    * No description
-   * @tags Contracts/Contacts
+   * @tags External contacts
    * @name FindOne
-   * @request GET:/{companyId}/contracts/contacts/{id}
+   * @request GET:/{companyId}/external-contacts/{id}
    * @secure
    */
   export namespace FindOne {
@@ -1769,32 +1588,106 @@ export namespace CompanyId {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = RoyaltyContactResponseDto;
+    export type ResponseBody = ExternalContactEntityDto;
   }
   /**
    * No description
-   * @tags Contracts/Contacts
+   * @tags External contacts
    * @name Update
-   * @request PATCH:/{companyId}/contracts/contacts/{id}
+   * @request PATCH:/{companyId}/external-contacts/{id}
    * @secure
    */
   export namespace Update {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
-    export type RequestBody = UpdateRoyaltyContactDTO;
+    export type RequestBody = UpdateExternalContactDto;
     export type RequestHeaders = {};
-    export type ResponseBody = RoyaltyContactResponseDto;
+    export type ResponseBody = ExternalContactEntityDto;
   }
   /**
    * No description
-   * @tags Contracts
+   * @tags Contracts - Royalty Eligible
    * @name Create2
-   * @request POST:/{companyId}/contracts
+   * @request POST:/{companyId}/contracts/royalty-eligible/create
    * @originalName create
    * @duplicate
    * @secure
    */
   export namespace Create2 {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateRoyaltyEligibleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RoyaltyEligibleEntityDto;
+  }
+  /**
+   * No description
+   * @tags Contracts - Royalty Eligible
+   * @name FindAll2
+   * @request GET:/{companyId}/contracts/royalty-eligible
+   * @originalName findAll
+   * @duplicate
+   * @secure
+   */
+  export namespace FindAll2 {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: 'ASC' | 'DESC';
+      minDate?: string;
+      maxDate?: string;
+      id?: string[];
+      userIds?: string[];
+      externalContactIds?: string[];
+      wallets?: boolean;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AbstractBase;
+  }
+  /**
+   * No description
+   * @tags Contracts - Royalty Eligible
+   * @name Upsert
+   * @request PATCH:/{companyId}/contracts/royalty-eligible
+   * @secure
+   */
+  export namespace Upsert {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = AlterRoyaltyEligibleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Contracts - Royalty Eligible
+   * @name FindOne2
+   * @request GET:/{companyId}/contracts/royalty-eligible/{id}
+   * @originalName findOne
+   * @duplicate
+   * @secure
+   */
+  export namespace FindOne2 {
+    export type RequestParams = { companyId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RoyaltyEligibleEntityDto;
+  }
+  /**
+   * No description
+   * @tags Contracts
+   * @name Create3
+   * @request POST:/{companyId}/contracts
+   * @originalName create
+   * @duplicate
+   * @secure
+   */
+  export namespace Create3 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateContractDto;
@@ -1804,13 +1697,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Contracts
-   * @name FindAll2
+   * @name FindAll3
    * @request GET:/{companyId}/contracts
    * @originalName findAll
    * @duplicate
    * @secure
    */
-  export namespace FindAll2 {
+  export namespace FindAll3 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1824,10 +1717,39 @@ export namespace CompanyId {
       maxDate?: string;
       contactId?: string;
       participantName?: string;
+      walletAddresses?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = AbstractBase;
+  }
+  /**
+   * No description
+   * @tags Contracts
+   * @name HasRole
+   * @request PATCH:/{companyId}/contracts/has-role
+   * @secure
+   */
+  export namespace HasRole {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = HasRoleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = HasRoleResponseDto;
+  }
+  /**
+   * No description
+   * @tags Contracts
+   * @name GrantRole
+   * @request PATCH:/{companyId}/contracts/grant-role
+   * @secure
+   */
+  export namespace GrantRole {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = HasRoleDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
   }
   /**
    * No description
@@ -1848,13 +1770,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Contracts
-   * @name FindOne2
+   * @name FindOne3
    * @request GET:/{companyId}/contracts/{id}
    * @originalName findOne
    * @duplicate
    * @secure
    */
-  export namespace FindOne2 {
+  export namespace FindOne3 {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1906,13 +1828,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Editions
-   * @name FindAll3
+   * @name FindAll4
    * @request GET:/{companyId}/token-editions
    * @originalName findAll
    * @duplicate
    * @secure
    */
-  export namespace FindAll3 {
+  export namespace FindAll4 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1921,6 +1843,19 @@ export namespace CompanyId {
       sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
       tokenCollectionId?: string;
+      walletAddresses?: string[];
+      status?: (
+        | 'draft'
+        | 'readyToMint'
+        | 'minting'
+        | 'minted'
+        | 'burning'
+        | 'burned'
+        | 'burnFailure'
+        | 'transferring'
+        | 'transferred'
+        | 'transferFailure'
+      )[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2027,13 +1962,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Editions
-   * @name FindOne3
+   * @name FindOne4
    * @request GET:/{companyId}/token-editions/{id}
    * @originalName findOne
    * @duplicate
    * @secure
    */
-  export namespace FindOne3 {
+  export namespace FindOne4 {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2099,13 +2034,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Collections
-   * @name Create3
+   * @name Create4
    * @request POST:/{companyId}/token-collections
    * @originalName create
    * @duplicate
    * @secure
    */
-  export namespace Create3 {
+  export namespace Create4 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateTokenCollectionDto;
@@ -2115,13 +2050,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Collections
-   * @name FindAll4
+   * @name FindAll5
    * @request GET:/{companyId}/token-collections
    * @originalName findAll
    * @duplicate
    * @secure
    */
-  export namespace FindAll4 {
+  export namespace FindAll5 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -2129,8 +2064,10 @@ export namespace CompanyId {
       search?: string;
       sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
-      status?: 'draft' | 'published';
+      status?: ('draft' | 'published')[];
       contractId?: string;
+      subcategoryIds?: string[];
+      walletAddresses?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2185,13 +2122,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Token Collections
-   * @name FindOne4
+   * @name FindOne5
    * @request GET:/{companyId}/token-collections/{id}
    * @originalName findOne
    * @duplicate
    * @secure
    */
-  export namespace FindOne4 {
+  export namespace FindOne5 {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2229,13 +2166,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Subcategories
-   * @name Create4
+   * @name Create5
    * @request POST:/{companyId}/subcategories
    * @originalName create
    * @duplicate
    * @secure
    */
-  export namespace Create4 {
+  export namespace Create5 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateSubcategoryDto;
@@ -2245,13 +2182,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Subcategories
-   * @name FindAll5
+   * @name FindAll6
    * @request GET:/{companyId}/subcategories
    * @originalName findAll
    * @duplicate
    * @secure
    */
-  export namespace FindAll5 {
+  export namespace FindAll6 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = { categoryId?: string };
     export type RequestBody = never;
@@ -2277,13 +2214,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Subcategories
-   * @name FindOne5
+   * @name FindOne6
    * @request GET:/{companyId}/subcategories/{id}
    * @originalName findOne
    * @duplicate
    * @secure
    */
-  export namespace FindOne5 {
+  export namespace FindOne6 {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2293,13 +2230,13 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Jobs
-   * @name FindAll6
+   * @name FindAll7
    * @request GET:/{companyId}/jobs
    * @originalName findAll
    * @duplicate
    * @secure
    */
-  export namespace FindAll6 {
+  export namespace FindAll7 {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -2315,18 +2252,92 @@ export namespace CompanyId {
   /**
    * No description
    * @tags Jobs
-   * @name FindOne6
+   * @name FindOne7
    * @request GET:/{companyId}/jobs/{id}
    * @originalName findOne
    * @duplicate
    * @secure
    */
-  export namespace FindOne6 {
+  export namespace FindOne7 {
     export type RequestParams = { companyId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = JobEntityDto;
+  }
+}
+
+export namespace Blockchain {
+  /**
+   * No description
+   * @tags Blockchain
+   * @name ReceiveEventWebhook
+   * @request POST:/blockchain/webhook/event/{companyId}
+   */
+  export namespace ReceiveEventWebhook {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = EventNotifyDto;
+    export type RequestHeaders = { 'x-pixchain-signature': string };
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name ReceiveTransactionWebhook
+   * @request POST:/blockchain/webhook/transaction/{companyId}
+   */
+  export namespace ReceiveTransactionWebhook {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = { 'x-pixchain-signature': string };
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name GetBalance
+   * @request GET:/blockchain/balance/{address}/{chainId}
+   * @secure
+   */
+  export namespace GetBalance {
+    export type RequestParams = { address: string; chainId: ChainId };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Blockchain
+   * @name GetGas
+   * @request GET:/blockchain/gas-cost/{companyId}
+   * @secure
+   */
+  export namespace GetGas {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+}
+
+export namespace Tokens {
+  /**
+   * No description
+   * @tags Tokens
+   * @name CheckCollectionTokenHolder
+   * @request PATCH:/tokens/check-collection-token-holder
+   * @secure
+   */
+  export namespace CheckCollectionTokenHolder {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CheckCollectionTokenHolderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
   }
 }
 
@@ -2420,22 +2431,6 @@ export namespace Categories {
   }
 }
 
-export namespace Auth {
-  /**
-   * No description
-   * @tags Authentication
-   * @name VerifySignUp
-   * @request GET:/auth/verify-sign-up
-   */
-  export namespace VerifySignUp {
-    export type RequestParams = {};
-    export type RequestQuery = { email: string; token: string };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = any;
-  }
-}
-
 export namespace Cloudinary {
   /**
    * No description
@@ -2449,6 +2444,269 @@ export namespace Cloudinary {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = SignaturePayloadResponseDto;
+  }
+}
+
+export namespace Companies {
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name GetCompanyByHost
+   * @request GET:/companies/hosts/by-host
+   * @secure
+   */
+  export namespace GetCompanyByHost {
+    export type RequestParams = {};
+    export type RequestQuery = { host: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name ToggleMainHost
+   * @request PUT:/companies/hosts/toggle/is-main
+   * @secure
+   */
+  export namespace ToggleMainHost {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = ByHostDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name Create
+   * @request POST:/companies/hosts
+   * @secure
+   */
+  export namespace Create {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateCompanyHostDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name FindAll
+   * @request GET:/companies/hosts
+   * @secure
+   */
+  export namespace FindAll {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: 'ASC' | 'DESC';
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name FindOne
+   * @request GET:/companies/hosts/{id}
+   * @secure
+   */
+  export namespace FindOne {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name Update
+   * @request PUT:/companies/hosts/{id}
+   * @secure
+   */
+  export namespace Update {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateCompanyHostDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies Hosts
+   * @name Remove
+   * @request DELETE:/companies/hosts/{id}
+   * @secure
+   */
+  export namespace Remove {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name Create2
+   * @request POST:/companies
+   * @originalName create
+   * @duplicate
+   * @secure
+   */
+  export namespace Create2 {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateCompanyDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyEntityDto;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name FindAll2
+   * @request GET:/companies
+   * @originalName findAll
+   * @duplicate
+   * @secure
+   */
+  export namespace FindAll2 {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: 'ASC' | 'DESC';
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = AbstractBase;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name SetupCompany
+   * @request PATCH:/companies/{companyId}/setup
+   * @secure
+   */
+  export namespace SetupCompany {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name FindOne2
+   * @request GET:/companies/{companyId}
+   * @originalName findOne
+   * @duplicate
+   * @secure
+   */
+  export namespace FindOne2 {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyEntityDto;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name Update2
+   * @request PATCH:/companies/{companyId}
+   * @originalName update
+   * @duplicate
+   * @secure
+   */
+  export namespace Update2 {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateCompanyDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyEntityDto;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name Remove2
+   * @request DELETE:/companies/{companyId}
+   * @originalName remove
+   * @duplicate
+   * @secure
+   */
+  export namespace Remove2 {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name UpdateProfile
+   * @request PATCH:/companies/profile/{companyId}
+   * @secure
+   */
+  export namespace UpdateProfile {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateCompanyProfileDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyEntityDto;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name ResyncCloneContracts
+   * @request POST:/companies/resync-clone-contract
+   * @secure
+   */
+  export namespace ResyncCloneContracts {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name CreateOrUpdateEmail
+   * @request POST:/companies/{companyId}/emails
+   * @secure
+   */
+  export namespace CreateOrUpdateEmail {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateCustomEmailDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
+  }
+  /**
+   * No description
+   * @tags Companies
+   * @name FindEmails
+   * @request GET:/companies/{companyId}/emails
+   * @secure
+   */
+  export namespace FindEmails {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = any;
   }
 }
 
@@ -2583,11 +2841,10 @@ export namespace Metadata {
     export type RequestQuery = {
       page?: number;
       limit?: number;
-      search?: string;
-      sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
       startDate: string;
       endDate: string;
+      sortBy?: MetadataHistorySortBy;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2732,8 +2989,8 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title pixway-registry
- * @version 0.3.2
+ * @title offpix-backend
+ * @version 0.4.1
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -2890,7 +3147,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     accountCompleteRetry: (data: AccountCompleteRetryDto, params: RequestParams = {}) =>
-      this.request<any, any>({
+      this.request<any, void>({
         path: `/users/account-complete/retry`,
         method: 'POST',
         body: data,
@@ -2900,363 +3157,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  companies = {
+  auth = {
     /**
      * No description
      *
-     * @tags Companies/Hosts
-     * @name GetCompanyByHost
-     * @request GET:/companies/hosts/by-host
-     * @secure
+     * @tags Authentication
+     * @name VerifySignUp
+     * @request GET:/auth/verify-sign-up
      */
-    getCompanyByHost: (query: { host: string }, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/companies/hosts/by-host`,
+    verifySignUp: (query: { email: string; token: string }, params: RequestParams = {}) =>
+      this.request<any, any>({
+        path: `/auth/verify-sign-up`,
         method: 'GET',
         query: query,
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name ToggleMainHost
-     * @request PUT:/companies/hosts/toggle/is-main
-     * @secure
-     */
-    toggleMainHost: (data: ByHostDto, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/hosts/toggle/is-main`,
-        method: 'PUT',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name Create
-     * @request POST:/companies/hosts
-     * @secure
-     */
-    create: (data: CreateCompanyHostDto, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/hosts`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name FindAll
-     * @request GET:/companies/hosts
-     * @secure
-     */
-    findAll: (
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: 'ASC' | 'DESC' },
-      params: RequestParams = {},
-    ) =>
-      this.request<any, void>({
-        path: `/companies/hosts`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name FindOne
-     * @request GET:/companies/hosts/{id}
-     * @secure
-     */
-    findOne: (id: string, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/hosts/${id}`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name Update
-     * @request PUT:/companies/hosts/{id}
-     * @secure
-     */
-    update: (id: string, data: UpdateCompanyHostDto, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/hosts/${id}`,
-        method: 'PUT',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies/Hosts
-     * @name Remove
-     * @request DELETE:/companies/hosts/{id}
-     * @secure
-     */
-    remove: (id: string, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/hosts/${id}`,
-        method: 'DELETE',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name Create2
-     * @request POST:/companies
-     * @originalName create
-     * @duplicate
-     * @secure
-     */
-    create2: (data: CreateCompanyDto, params: RequestParams = {}) =>
-      this.request<CompanyEntityDto, void>({
-        path: `/companies`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name FindAll2
-     * @request GET:/companies
-     * @originalName findAll
-     * @duplicate
-     * @secure
-     */
-    findAll2: (
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: 'ASC' | 'DESC' },
-      params: RequestParams = {},
-    ) =>
-      this.request<AbstractBase, void>({
-        path: `/companies`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name FindOne2
-     * @request GET:/companies/{id}
-     * @originalName findOne
-     * @duplicate
-     * @secure
-     */
-    findOne2: (id: string, params: RequestParams = {}) =>
-      this.request<CompanyEntityDto, void>({
-        path: `/companies/${id}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name Update2
-     * @request PATCH:/companies/{id}
-     * @originalName update
-     * @duplicate
-     * @secure
-     */
-    update2: (id: string, data: UpdateCompanyDto, params: RequestParams = {}) =>
-      this.request<CompanyEntityDto, void>({
-        path: `/companies/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name Remove2
-     * @request DELETE:/companies/{id}
-     * @originalName remove
-     * @duplicate
-     * @secure
-     */
-    remove2: (id: string, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/${id}`,
-        method: 'DELETE',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name UpdateProfile
-     * @request PATCH:/companies/profile/{id}
-     * @secure
-     */
-    updateProfile: (id: string, data: UpdateCompanyProfileDto, params: RequestParams = {}) =>
-      this.request<CompanyEntityDto, void>({
-        path: `/companies/profile/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name ResyncCloneContracts
-     * @request POST:/companies/resync-clone-contract
-     * @secure
-     */
-    resyncCloneContracts: (params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/resync-clone-contract`,
-        method: 'POST',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name CreateOrUpdateEmail
-     * @request POST:/companies/{id}/emails
-     * @secure
-     */
-    createOrUpdateEmail: (id: string, data: CreateCustomEmailDto, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/${id}/emails`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Companies
-     * @name FindEmails
-     * @request GET:/companies/{id}/emails
-     * @secure
-     */
-    findEmails: (id: string, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/companies/${id}/emails`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-  };
-  blockchain = {
-    /**
-     * No description
-     *
-     * @tags Blockchain
-     * @name ReceiveEventWebhook
-     * @request POST:/blockchain/webhook/event/{companyId}
-     */
-    receiveEventWebhook: (companyId: string, data: EventNotifyDto, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/blockchain/webhook/event/${companyId}`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Blockchain
-     * @name ReceiveTransactionWebhook
-     * @request POST:/blockchain/webhook/transaction/{companyId}
-     */
-    receiveTransactionWebhook: (companyId: string, params: RequestParams = {}) =>
-      this.request<any, void>({
-        path: `/blockchain/webhook/transaction/${companyId}`,
-        method: 'POST',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Blockchain
-     * @name GetBalance
-     * @request GET:/blockchain/balance/{address}/{chainId}
-     * @secure
-     */
-    getBalance: (address: string, chainId: ChainId, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/blockchain/balance/${address}/${chainId}`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Blockchain
-     * @name GetGas
-     * @request GET:/blockchain/gas-cost/{companyId}
-     * @secure
-     */
-    getGas: (companyId: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/blockchain/gas-cost/${companyId}`,
-        method: 'GET',
-        secure: true,
         ...params,
       }),
   };
@@ -3264,14 +3178,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts/Contacts
+     * @tags External contacts
      * @name Invite
-     * @request POST:/{companyId}/contracts/contacts/invite
+     * @request POST:/{companyId}/external-contacts/invite
      * @secure
      */
-    invite: (companyId: string, data: InviteRoyaltyContactDto, params: RequestParams = {}) =>
-      this.request<RoyaltyContactResponseDto, void>({
-        path: `/${companyId}/contracts/contacts/invite`,
+    invite: (companyId: string, data: InviteExternalContactDto, params: RequestParams = {}) =>
+      this.request<ExternalContactEntityDto, void>({
+        path: `/${companyId}/external-contacts/invite`,
         method: 'POST',
         body: data,
         secure: true,
@@ -3283,14 +3197,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts/Contacts
+     * @tags External contacts
      * @name Create
-     * @request POST:/{companyId}/contracts/contacts/import
+     * @request POST:/{companyId}/external-contacts/import
      * @secure
      */
-    create: (companyId: string, data: CreateRoyaltyContactDTO, params: RequestParams = {}) =>
-      this.request<RoyaltyContactResponseDto, void>({
-        path: `/${companyId}/contracts/contacts/import`,
+    create: (companyId: string, data: InviteExternalContactDto, params: RequestParams = {}) =>
+      this.request<ExternalContactEntityDto, void>({
+        path: `/${companyId}/external-contacts/import`,
         method: 'POST',
         body: data,
         secure: true,
@@ -3302,9 +3216,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts/Contacts
+     * @tags External contacts
      * @name FindAll
-     * @request GET:/{companyId}/contracts/contacts
+     * @request GET:/{companyId}/external-contacts
      * @secure
      */
     findAll: (
@@ -3315,14 +3229,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
-        type?: 'client' | 'partner' | 'team';
+        id?: string[];
+        userIds?: string[];
         minDate?: string;
         maxDate?: string;
       },
       params: RequestParams = {},
     ) =>
       this.request<AbstractBase, void>({
-        path: `/${companyId}/contracts/contacts`,
+        path: `/${companyId}/external-contacts`,
         method: 'GET',
         query: query,
         secure: true,
@@ -3333,14 +3248,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts/Contacts
+     * @tags External contacts
      * @name FindOne
-     * @request GET:/{companyId}/contracts/contacts/{id}
+     * @request GET:/{companyId}/external-contacts/{id}
      * @secure
      */
     findOne: (companyId: string, id: string, params: RequestParams = {}) =>
-      this.request<RoyaltyContactResponseDto, void>({
-        path: `/${companyId}/contracts/contacts/${id}`,
+      this.request<ExternalContactEntityDto, void>({
+        path: `/${companyId}/external-contacts/${id}`,
         method: 'GET',
         secure: true,
         format: 'json',
@@ -3350,14 +3265,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts/Contacts
+     * @tags External contacts
      * @name Update
-     * @request PATCH:/{companyId}/contracts/contacts/{id}
+     * @request PATCH:/{companyId}/external-contacts/{id}
      * @secure
      */
-    update: (companyId: string, id: string, data: UpdateRoyaltyContactDTO, params: RequestParams = {}) =>
-      this.request<RoyaltyContactResponseDto, void>({
-        path: `/${companyId}/contracts/contacts/${id}`,
+    update: (companyId: string, id: string, data: UpdateExternalContactDto, params: RequestParams = {}) =>
+      this.request<ExternalContactEntityDto, void>({
+        path: `/${companyId}/external-contacts/${id}`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -3369,14 +3284,108 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Contracts
+     * @tags Contracts - Royalty Eligible
      * @name Create2
+     * @request POST:/{companyId}/contracts/royalty-eligible/create
+     * @originalName create
+     * @duplicate
+     * @secure
+     */
+    create2: (companyId: string, data: CreateRoyaltyEligibleDto, params: RequestParams = {}) =>
+      this.request<RoyaltyEligibleEntityDto, void>({
+        path: `/${companyId}/contracts/royalty-eligible/create`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts - Royalty Eligible
+     * @name FindAll2
+     * @request GET:/{companyId}/contracts/royalty-eligible
+     * @originalName findAll
+     * @duplicate
+     * @secure
+     */
+    findAll2: (
+      companyId: string,
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        orderBy?: 'ASC' | 'DESC';
+        minDate?: string;
+        maxDate?: string;
+        id?: string[];
+        userIds?: string[];
+        externalContactIds?: string[];
+        wallets?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<AbstractBase, void>({
+        path: `/${companyId}/contracts/royalty-eligible`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts - Royalty Eligible
+     * @name Upsert
+     * @request PATCH:/{companyId}/contracts/royalty-eligible
+     * @secure
+     */
+    upsert: (companyId: string, data: AlterRoyaltyEligibleDto, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/${companyId}/contracts/royalty-eligible`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts - Royalty Eligible
+     * @name FindOne2
+     * @request GET:/{companyId}/contracts/royalty-eligible/{id}
+     * @originalName findOne
+     * @duplicate
+     * @secure
+     */
+    findOne2: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<RoyaltyEligibleEntityDto, void>({
+        path: `/${companyId}/contracts/royalty-eligible/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts
+     * @name Create3
      * @request POST:/{companyId}/contracts
      * @originalName create
      * @duplicate
      * @secure
      */
-    create2: (companyId: string, data: CreateContractDto, params: RequestParams = {}) =>
+    create3: (companyId: string, data: CreateContractDto, params: RequestParams = {}) =>
       this.request<NftContractEntityDto, void>({
         path: `/${companyId}/contracts`,
         method: 'POST',
@@ -3391,13 +3400,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Contracts
-     * @name FindAll2
+     * @name FindAll3
      * @request GET:/{companyId}/contracts
      * @originalName findAll
      * @duplicate
      * @secure
      */
-    findAll2: (
+    findAll3: (
       companyId: string,
       query?: {
         page?: number;
@@ -3411,6 +3420,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         maxDate?: string;
         contactId?: string;
         participantName?: string;
+        walletAddresses?: string[];
       },
       params: RequestParams = {},
     ) =>
@@ -3420,6 +3430,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query: query,
         secure: true,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts
+     * @name HasRole
+     * @request PATCH:/{companyId}/contracts/has-role
+     * @secure
+     */
+    hasRole: (companyId: string, data: HasRoleDto, params: RequestParams = {}) =>
+      this.request<HasRoleResponseDto, void>({
+        path: `/${companyId}/contracts/has-role`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Contracts
+     * @name GrantRole
+     * @request PATCH:/{companyId}/contracts/grant-role
+     * @secure
+     */
+    grantRole: (companyId: string, data: HasRoleDto, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/${companyId}/contracts/grant-role`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 
@@ -3448,13 +3495,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Contracts
-     * @name FindOne2
+     * @name FindOne3
      * @request GET:/{companyId}/contracts/{id}
      * @originalName findOne
      * @duplicate
      * @secure
      */
-    findOne2: (id: string, companyId: string, params: RequestParams = {}) =>
+    findOne3: (id: string, companyId: string, params: RequestParams = {}) =>
       this.request<NftContractEntityDto, void>({
         path: `/${companyId}/contracts/${id}`,
         method: 'GET',
@@ -3520,13 +3567,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Editions
-     * @name FindAll3
+     * @name FindAll4
      * @request GET:/{companyId}/token-editions
      * @originalName findAll
      * @duplicate
      * @secure
      */
-    findAll3: (
+    findAll4: (
       companyId: string,
       query?: {
         page?: number;
@@ -3535,6 +3582,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
         tokenCollectionId?: string;
+        walletAddresses?: string[];
+        status?: (
+          | 'draft'
+          | 'readyToMint'
+          | 'minting'
+          | 'minted'
+          | 'burning'
+          | 'burned'
+          | 'burnFailure'
+          | 'transferring'
+          | 'transferred'
+          | 'transferFailure'
+        )[];
       },
       params: RequestParams = {},
     ) =>
@@ -3678,13 +3738,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Editions
-     * @name FindOne3
+     * @name FindOne4
      * @request GET:/{companyId}/token-editions/{id}
      * @originalName findOne
      * @duplicate
      * @secure
      */
-    findOne3: (companyId: string, id: string, params: RequestParams = {}) =>
+    findOne4: (companyId: string, id: string, params: RequestParams = {}) =>
       this.request<TokenEditionPublicDto, void>({
         path: `/${companyId}/token-editions/${id}`,
         method: 'GET',
@@ -3774,13 +3834,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Collections
-     * @name Create3
+     * @name Create4
      * @request POST:/{companyId}/token-collections
      * @originalName create
      * @duplicate
      * @secure
      */
-    create3: (companyId: string, data: CreateTokenCollectionDto, params: RequestParams = {}) =>
+    create4: (companyId: string, data: CreateTokenCollectionDto, params: RequestParams = {}) =>
       this.request<TokenCollectionEntityDto, void>({
         path: `/${companyId}/token-collections`,
         method: 'POST',
@@ -3795,13 +3855,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Collections
-     * @name FindAll4
+     * @name FindAll5
      * @request GET:/{companyId}/token-collections
      * @originalName findAll
      * @duplicate
      * @secure
      */
-    findAll4: (
+    findAll5: (
       companyId: string,
       query?: {
         page?: number;
@@ -3809,8 +3869,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
-        status?: 'draft' | 'published';
+        status?: ('draft' | 'published')[];
         contractId?: string;
+        subcategoryIds?: string[];
+        walletAddresses?: string[];
       },
       params: RequestParams = {},
     ) =>
@@ -3891,13 +3953,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Collections
-     * @name FindOne4
+     * @name FindOne5
      * @request GET:/{companyId}/token-collections/{id}
      * @originalName findOne
      * @duplicate
      * @secure
      */
-    findOne4: (companyId: string, id: string, params: RequestParams = {}) =>
+    findOne5: (companyId: string, id: string, params: RequestParams = {}) =>
       this.request<TokenCollectionEntityDto, void>({
         path: `/${companyId}/token-collections/${id}`,
         method: 'GET',
@@ -3944,13 +4006,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Subcategories
-     * @name Create4
+     * @name Create5
      * @request POST:/{companyId}/subcategories
      * @originalName create
      * @duplicate
      * @secure
      */
-    create4: (companyId: string, data: CreateSubcategoryDto, params: RequestParams = {}) =>
+    create5: (companyId: string, data: CreateSubcategoryDto, params: RequestParams = {}) =>
       this.request<SubcategoryEntityDto, void>({
         path: `/${companyId}/subcategories`,
         method: 'POST',
@@ -3965,13 +4027,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Subcategories
-     * @name FindAll5
+     * @name FindAll6
      * @request GET:/{companyId}/subcategories
      * @originalName findAll
      * @duplicate
      * @secure
      */
-    findAll5: (companyId: string, query?: { categoryId?: string }, params: RequestParams = {}) =>
+    findAll6: (companyId: string, query?: { categoryId?: string }, params: RequestParams = {}) =>
       this.request<SubcategoryEntityDto[], void>({
         path: `/${companyId}/subcategories`,
         method: 'GET',
@@ -4006,13 +4068,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Subcategories
-     * @name FindOne5
+     * @name FindOne6
      * @request GET:/{companyId}/subcategories/{id}
      * @originalName findOne
      * @duplicate
      * @secure
      */
-    findOne5: (id: string, companyId: string, params: RequestParams = {}) =>
+    findOne6: (id: string, companyId: string, params: RequestParams = {}) =>
       this.request<SubcategoryEntityDto, void>({
         path: `/${companyId}/subcategories/${id}`,
         method: 'GET',
@@ -4025,13 +4087,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Jobs
-     * @name FindAll6
+     * @name FindAll7
      * @request GET:/{companyId}/jobs
      * @originalName findAll
      * @duplicate
      * @secure
      */
-    findAll6: (
+    findAll7: (
       companyId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: 'ASC' | 'DESC' },
       params: RequestParams = {},
@@ -4049,18 +4111,100 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Jobs
-     * @name FindOne6
+     * @name FindOne7
      * @request GET:/{companyId}/jobs/{id}
      * @originalName findOne
      * @duplicate
      * @secure
      */
-    findOne6: (companyId: string, id: string, params: RequestParams = {}) =>
-      this.request<JobEntityDto, any>({
+    findOne7: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<JobEntityDto, void>({
         path: `/${companyId}/jobs/${id}`,
         method: 'GET',
         secure: true,
         format: 'json',
+        ...params,
+      }),
+  };
+  blockchain = {
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name ReceiveEventWebhook
+     * @request POST:/blockchain/webhook/event/{companyId}
+     */
+    receiveEventWebhook: (companyId: string, data: EventNotifyDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/webhook/event/${companyId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name ReceiveTransactionWebhook
+     * @request POST:/blockchain/webhook/transaction/{companyId}
+     */
+    receiveTransactionWebhook: (companyId: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/webhook/transaction/${companyId}`,
+        method: 'POST',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name GetBalance
+     * @request GET:/blockchain/balance/{address}/{chainId}
+     * @secure
+     */
+    getBalance: (address: string, chainId: ChainId, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/balance/${address}/${chainId}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Blockchain
+     * @name GetGas
+     * @request GET:/blockchain/gas-cost/{companyId}
+     * @secure
+     */
+    getGas: (companyId: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/blockchain/gas-cost/${companyId}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+  };
+  tokens = {
+    /**
+     * No description
+     *
+     * @tags Tokens
+     * @name CheckCollectionTokenHolder
+     * @request PATCH:/tokens/check-collection-token-holder
+     * @secure
+     */
+    checkCollectionTokenHolder: (data: CheckCollectionTokenHolderDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/tokens/check-collection-token-holder`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
   };
@@ -4174,23 +4318,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         ...params,
       }),
   };
-  auth = {
-    /**
-     * No description
-     *
-     * @tags Authentication
-     * @name VerifySignUp
-     * @request GET:/auth/verify-sign-up
-     */
-    verifySignUp: (query: { email: string; token: string }, params: RequestParams = {}) =>
-      this.request<any, any>({
-        path: `/auth/verify-sign-up`,
-        method: 'GET',
-        query: query,
-        format: 'json',
-        ...params,
-      }),
-  };
   cloudinary = {
     /**
      * No description
@@ -4204,6 +4331,319 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/cloudinary/get-signature`,
         method: 'GET',
         format: 'json',
+        ...params,
+      }),
+  };
+  companies = {
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name GetCompanyByHost
+     * @request GET:/companies/hosts/by-host
+     * @secure
+     */
+    getCompanyByHost: (query: { host: string }, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/hosts/by-host`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name ToggleMainHost
+     * @request PUT:/companies/hosts/toggle/is-main
+     * @secure
+     */
+    toggleMainHost: (data: ByHostDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/hosts/toggle/is-main`,
+        method: 'PUT',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name Create
+     * @request POST:/companies/hosts
+     * @secure
+     */
+    create: (data: CreateCompanyHostDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/hosts`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name FindAll
+     * @request GET:/companies/hosts
+     * @secure
+     */
+    findAll: (
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: 'ASC' | 'DESC' },
+      params: RequestParams = {},
+    ) =>
+      this.request<any, void>({
+        path: `/companies/hosts`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name FindOne
+     * @request GET:/companies/hosts/{id}
+     * @secure
+     */
+    findOne: (id: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/hosts/${id}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name Update
+     * @request PUT:/companies/hosts/{id}
+     * @secure
+     */
+    update: (id: string, data: UpdateCompanyHostDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/hosts/${id}`,
+        method: 'PUT',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies Hosts
+     * @name Remove
+     * @request DELETE:/companies/hosts/{id}
+     * @secure
+     */
+    remove: (id: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/hosts/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name Create2
+     * @request POST:/companies
+     * @originalName create
+     * @duplicate
+     * @secure
+     */
+    create2: (data: CreateCompanyDto, params: RequestParams = {}) =>
+      this.request<CompanyEntityDto, void>({
+        path: `/companies`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name FindAll2
+     * @request GET:/companies
+     * @originalName findAll
+     * @duplicate
+     * @secure
+     */
+    findAll2: (
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: 'ASC' | 'DESC' },
+      params: RequestParams = {},
+    ) =>
+      this.request<AbstractBase, void>({
+        path: `/companies`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name SetupCompany
+     * @request PATCH:/companies/{companyId}/setup
+     * @secure
+     */
+    setupCompany: (companyId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/setup`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name FindOne2
+     * @request GET:/companies/{companyId}
+     * @originalName findOne
+     * @duplicate
+     * @secure
+     */
+    findOne2: (companyId: string, params: RequestParams = {}) =>
+      this.request<CompanyEntityDto, void>({
+        path: `/companies/${companyId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name Update2
+     * @request PATCH:/companies/{companyId}
+     * @originalName update
+     * @duplicate
+     * @secure
+     */
+    update2: (companyId: string, data: UpdateCompanyDto, params: RequestParams = {}) =>
+      this.request<CompanyEntityDto, void>({
+        path: `/companies/${companyId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name Remove2
+     * @request DELETE:/companies/{companyId}
+     * @originalName remove
+     * @duplicate
+     * @secure
+     */
+    remove2: (companyId: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/${companyId}`,
+        method: 'DELETE',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name UpdateProfile
+     * @request PATCH:/companies/profile/{companyId}
+     * @secure
+     */
+    updateProfile: (companyId: string, data: UpdateCompanyProfileDto, params: RequestParams = {}) =>
+      this.request<CompanyEntityDto, void>({
+        path: `/companies/profile/${companyId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name ResyncCloneContracts
+     * @request POST:/companies/resync-clone-contract
+     * @secure
+     */
+    resyncCloneContracts: (params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/resync-clone-contract`,
+        method: 'POST',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name CreateOrUpdateEmail
+     * @request POST:/companies/{companyId}/emails
+     * @secure
+     */
+    createOrUpdateEmail: (companyId: string, data: CreateCustomEmailDto, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/${companyId}/emails`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Companies
+     * @name FindEmails
+     * @request GET:/companies/{companyId}/emails
+     * @secure
+     */
+    findEmails: (companyId: string, params: RequestParams = {}) =>
+      this.request<any, void>({
+        path: `/companies/${companyId}/emails`,
+        method: 'GET',
+        secure: true,
         ...params,
       }),
   };
@@ -4330,7 +4770,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     countTransactionsByAddress: (companyId: string, chainId: ChainId, address: string, params: RequestParams = {}) =>
-      this.request<CountTransactionsResponseDto, any>({
+      this.request<CountTransactionsResponseDto, void>({
         path: `/metadata/transactions/${companyId}/count/${address}/${chainId}`,
         method: 'GET',
         secure: true,
@@ -4347,7 +4787,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     countTransactions: (companyId: string, chainId: ChainId, params: RequestParams = {}) =>
-      this.request<CountTransactionsResponseDto, any>({
+      this.request<CountTransactionsResponseDto, void>({
         path: `/metadata/transactions/${companyId}/count/${chainId}`,
         method: 'GET',
         secure: true,
@@ -4366,11 +4806,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query: {
         page?: number;
         limit?: number;
-        search?: string;
-        sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
         startDate: string;
         endDate: string;
+        sortBy?: MetadataHistorySortBy;
       },
       params: RequestParams = {},
     ) =>
