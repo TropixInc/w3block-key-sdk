@@ -1717,6 +1717,7 @@ export namespace CompanyId {
       maxDate?: string;
       contactId?: string;
       participantName?: string;
+      walletAddresses?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1842,6 +1843,19 @@ export namespace CompanyId {
       sortBy?: string;
       orderBy?: 'ASC' | 'DESC';
       tokenCollectionId?: string;
+      walletAddresses?: string[];
+      status?: (
+        | 'draft'
+        | 'readyToMint'
+        | 'minting'
+        | 'minted'
+        | 'burning'
+        | 'burned'
+        | 'burnFailure'
+        | 'transferring'
+        | 'transferred'
+        | 'transferFailure'
+      )[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2053,6 +2067,7 @@ export namespace CompanyId {
       status?: ('draft' | 'published')[];
       contractId?: string;
       subcategoryIds?: string[];
+      walletAddresses?: string[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -3405,6 +3420,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         maxDate?: string;
         contactId?: string;
         participantName?: string;
+        walletAddresses?: string[];
       },
       params: RequestParams = {},
     ) =>
@@ -3566,6 +3582,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: string;
         orderBy?: 'ASC' | 'DESC';
         tokenCollectionId?: string;
+        walletAddresses?: string[];
+        status?: (
+          | 'draft'
+          | 'readyToMint'
+          | 'minting'
+          | 'minted'
+          | 'burning'
+          | 'burned'
+          | 'burnFailure'
+          | 'transferring'
+          | 'transferred'
+          | 'transferFailure'
+        )[];
       },
       params: RequestParams = {},
     ) =>
@@ -3843,6 +3872,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         status?: ('draft' | 'published')[];
         contractId?: string;
         subcategoryIds?: string[];
+        walletAddresses?: string[];
       },
       params: RequestParams = {},
     ) =>

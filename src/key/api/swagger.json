@@ -1312,6 +1312,17 @@
             }
           },
           {
+            "name": "walletAddresses",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "companyId",
             "required": true,
             "in": "path",
@@ -1967,6 +1978,40 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "walletAddresses",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "readyToMint",
+                  "minting",
+                  "minted",
+                  "burning",
+                  "burned",
+                  "burnFailure",
+                  "transferring",
+                  "transferred",
+                  "transferFailure"
+                ]
+              }
             }
           }
         ],
@@ -2883,6 +2928,17 @@
           },
           {
             "name": "subcategoryIds",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "walletAddresses",
             "required": false,
             "in": "query",
             "schema": {
