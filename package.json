@@ -93,6 +93,9 @@
     "node-polyfill-webpack-plugin": "^1.1.4",
     "query-string": "^7.0.1"
   },
+  "peerDependencies": {
+    "@w3block/sdk-id": "^0.1.27"
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

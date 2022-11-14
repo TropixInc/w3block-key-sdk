@@ -1,3 +1,4 @@
+import { W3blockIdSDK } from '@w3block/sdk-id';
 import { JwtType } from './enums';
 
 export interface UserCredential {
@@ -27,8 +28,7 @@ export type Credential = UserCredential | TenantCredential | TokenCredential;
 
 export interface W3blockKeySDKOptions {
   baseURL?: string;
-  autoRefresh?: boolean;
-  tokenExpireOffset?: number;
+  idSdk: W3blockIdSDK;
 }
 
 /**
