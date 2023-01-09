@@ -11,7 +11,7 @@ export class W3blockKeySDK {
   protected options: W3blockKeySDKOptions;
 
   protected defaultOptions: Partial<W3blockKeySDKOptions> = {
-    baseURL: process.env.KEY_API_BASE_URL || 'https://key.w3block.io',
+    baseURL: process.env.KEY_API_BASE_URL || 'https://api.w3block.io',
   };
 
   constructor(options: W3blockKeySDKOptions) {
