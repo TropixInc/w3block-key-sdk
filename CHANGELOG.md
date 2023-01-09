@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.8 (2023-01-09)
+
+
+### Features
+
+* **api:** swagger new version generated ([afb9b15](https://github.com/TropixInc/w3block-sdk/commit/afb9b1528271b98dc2827b05566bec9f243f8d01))
+
 ### 0.1.7 (2022-10-04)
 
 ### 0.1.6 (2022-10-04)
