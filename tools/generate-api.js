@@ -1,4 +1,4 @@
-const { getConfig } = require('./config');
+const { getConfig, handleCatch } = require('./config');
 const { generateApi } = require('swagger-typescript-api');
 const fs = require('fs');
 const path = require('path');
@@ -20,6 +20,9 @@ async function run() {
     input: path.resolve(config.swagger.dest, config.swagger.filename),
     httpClientType: 'axios',
     generateRouteTypes: true,
+    generateResponses: true,
+    defaultResponseAsSuccess: true,
+    moduleNameFirstTag: true,
     hooks: {
       onParseSchema: (schema, parsed) => {
         // Parse ChainId enum correctly
@@ -44,12 +47,28 @@ async function run() {
             };
           });
         }
+
         return parsed;
       },
-      onPrepareConfig: (config) => {
-        config.additionalProperties = false;
-        return config;
-      }
+      // onCreateRoute: (routeData) => {
+      //   if(routeData.raw.route.startsWith('/categories')  || routeData.raw.route.startsWith('/subcategories')){
+      //     routeData.raw.moduleName += 'Generic';
+      //     routeData.namespace += 'Generic';
+
+      //      return routeData;
+      //    }
+      //    return routeData;
+      // },
+      onCreateRoute: (routeData) => {
+        // Patch route module name due controller conflict
+        if(routeData.raw.route.startsWith('/{companyId}')){
+          routeData.raw.moduleName += 'ByCompany';
+          routeData.namespace += 'ByCompany';
+
+           return routeData;
+         }
+         return routeData;
+      },
     }
   })
 
@@ -59,4 +78,4 @@ async function run() {
   });
 };
 
-run().catch((e) => console.error(e));
+run().catch(handleCatch);
