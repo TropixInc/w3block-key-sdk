@@ -2096,7 +2096,6 @@ export namespace TokenEditionsByCompany {
       /** @default "DESC" */
       orderBy?: 'ASC' | 'DESC';
       tokenCollectionId?: string;
-      /** @example 1 */
       editionNumber?: number;
       walletAddresses?: string[];
       /** @format uuid */
@@ -4445,7 +4444,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default "DESC" */
         orderBy?: 'ASC' | 'DESC';
         tokenCollectionId?: string;
-        /** @example 1 */
         editionNumber?: number;
         walletAddresses?: string[];
         /** @format uuid */

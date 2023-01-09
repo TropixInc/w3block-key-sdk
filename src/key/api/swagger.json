@@ -2509,7 +2509,6 @@
             "name": "editionNumber",
             "required": false,
             "in": "query",
-            "example": 1,
             "schema": {
               "type": "number"
             }
