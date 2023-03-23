@@ -198,18 +198,20 @@ export interface CreateContractDto {
    * @example 4
    */
   chainId: ChainId;
-  description?: string;
+  description?: object;
   /** @example "https://dummyimage.com/600x400/fff/000" */
-  image?: string;
+  image?: object;
   /** @example "https://stg.pixway.io" */
-  externalLink?: string;
+  externalLink?: object;
   participants: RoyaltyParticipantsDto[];
   /** @example ["admin:mover","admin:minter","admin:burner","user:burner","user:mover"] */
   features?: ContractFeature[];
   /** @format uuid */
-  transferWhitelistId?: string;
+  transferWhitelistId?: object;
   /** @format uuid */
-  minterWhitelistId?: string;
+  minterWhitelistId?: object;
+  /** @example null */
+  maxSupply?: string;
 }
 
 export enum ContractStatus {
@@ -217,12 +219,6 @@ export enum ContractStatus {
   Publishing = 'publishing',
   Published = 'published',
   Failed = 'failed',
-}
-
-export interface RoyaltyPlatformDto {
-  payee: string;
-  share: number;
-  name?: string;
 }
 
 export enum ContractActionStatus {
@@ -265,35 +261,13 @@ export interface ContractActionEntityDto {
   updatedAt?: string;
 }
 
-export interface RoyaltyContractEntityDto {
-  id: string;
-  companyId: string;
-  /**
-   * @default "draft"
-   * @example "draft"
-   */
-  status: ContractStatus;
-  address?: string;
-  chainId: number;
-  platform: RoyaltyPlatformDto;
-  participants: string[];
-  blockchain: string[];
-  fee: number;
-  contractAction: ContractActionEntityDto;
-  contractActionId: string;
-  isContract: boolean;
-  /** @format date-time */
-  deletedAt?: string;
-  /** @format date-time */
-  createdAt?: string;
-  /** @format date-time */
-  updatedAt?: string;
-}
-
 export interface NftContractEntityDto {
+  /** @format uuid */
   id: string;
+  /** @format uuid */
   companyId: string;
-  royalty?: RoyaltyContractEntityDto;
+  royalty?: object;
+  /** @format uuid */
   royaltyId?: string;
   address?: string;
   chainId: number;
@@ -322,6 +296,7 @@ export interface NftContractEntityDto {
   transferWhitelistId?: string;
   /** @format uuid */
   minterWhitelistId?: string;
+  maxSupply?: number;
 }
 
 export enum ContractOperatorRole {
@@ -360,18 +335,20 @@ export interface UpdateContractDto {
    * @example 4
    */
   chainId?: ChainId;
-  description?: string;
+  description?: object;
   /** @example "https://dummyimage.com/600x400/fff/000" */
-  image?: string;
+  image?: object;
   /** @example "https://stg.pixway.io" */
-  externalLink?: string;
+  externalLink?: object;
   participants?: RoyaltyParticipantsDto[];
   /** @example ["admin:mover","admin:minter","admin:burner","user:burner","user:mover"] */
   features?: ContractFeature[];
   /** @format uuid */
-  transferWhitelistId?: string;
+  transferWhitelistId?: object;
   /** @format uuid */
-  minterWhitelistId?: string;
+  minterWhitelistId?: object;
+  /** @example null */
+  maxSupply?: string;
 }
 
 export interface NftContractPaginateResponseDto {
@@ -423,6 +400,15 @@ export interface EventNotifyDto {
   /** @example {"from":"0x0000000000000000000000000000000000000000","to":"0xe5dc6eb721b535ece3be1b3220be2ce41ac284fc","tokenId":{"_hex":"0x03","_isBigNumber":true}} */
   args: object;
   transactionId?: string;
+}
+
+export interface RoyaltyPlatformDto {
+  /** @example "W3block" */
+  name?: string;
+  /** @example 2 */
+  share?: number;
+  /** @example "0xbc99eb9e5a05c72ca34c3554d12266e7a48e63b7" */
+  payee?: string;
 }
 
 export interface CreateCompanyDto {
@@ -586,8 +572,11 @@ export interface TokenCollectionDto {
 }
 
 export interface NftContractDto {
+  /** @format uuid */
   id: string;
+  /** @format uuid */
   companyId: string;
+  /** @format uuid */
   royaltyId?: string;
   address?: string;
   chainId: number;
@@ -615,9 +604,11 @@ export interface NftContractDto {
   transferWhitelistId?: string;
   /** @format uuid */
   minterWhitelistId?: string;
+  maxSupply?: number;
 }
 
 export enum TokenEditionStatusEnum {
+  ImportError = 'importError',
   Draft = 'draft',
   DraftError = 'draftError',
   ReadyToMint = 'readyToMint',
@@ -718,6 +709,17 @@ export interface ChangeStatusReadyToMintDto {
   editionId: string[];
 }
 
+export interface MintOnDemandDto {
+  /**
+   * Array of edition number
+   * @example []
+   */
+  editionNumbers: number;
+  /** @format uuid */
+  collectionId: string;
+  ownerAddress: string;
+}
+
 export interface TransferTokensDto {
   toAddress: string;
   /**
@@ -728,8 +730,6 @@ export interface TransferTokensDto {
 }
 
 export interface UpdateTokenEditionDto {
-  /** @example "" */
-  tokenCollectionId: string;
   /** @example "Token Collection" */
   name?: string;
   /** @example "" */
@@ -926,8 +926,8 @@ export interface TokenCollectionEntityDto {
   similarTokens: boolean;
 }
 
-export interface PublishTokenCollectionResponseDto {
-  tokenCollection: TokenCollectionEntityDto;
+export interface JobIdResponseDto {
+  jobId?: string;
 }
 
 export interface UpdateTokenCollectionDto {
@@ -947,6 +947,10 @@ export interface UpdateTokenCollectionDto {
   rangeInitialToMint: object;
   /** @example null */
   ownerAddress?: string;
+}
+
+export interface PublishTokenCollectionResponseDto {
+  tokenCollection: TokenCollectionEntityDto;
 }
 
 export interface TokenCollectionPaginateResponseDto {
@@ -1030,10 +1034,14 @@ export interface TokenEditionInformationBaseResponseDto {
   contractAddress: string;
   /** @example 1 */
   editionNumber: number;
+  /** @example 1 */
+  tokenId?: number | null;
   /** @example true */
   isAvailable: boolean;
   /** @format uuid */
   id: string;
+  /** @example "minted" */
+  status: TokenEditionStatusEnum;
 }
 
 export interface TokenPayloadAttributeDto {
@@ -1073,6 +1081,7 @@ export interface PublicDataGroupDto {
   subcategoryName: string;
   collectionId: string;
   collectionName: string;
+  collectionPass: boolean;
 }
 
 export interface PublicDataInformationDto {
@@ -2101,6 +2110,7 @@ export namespace TokenEditionsByCompany {
       /** @format uuid */
       userId?: string;
       status?: (
+        | 'importError'
         | 'draft'
         | 'draftError'
         | 'readyToMint'
@@ -2153,6 +2163,24 @@ export namespace TokenEditionsByCompany {
     };
     export type RequestQuery = {};
     export type RequestBody = ChangeStatusReadyToMintDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Mint on demand
+   * @tags Token Editions
+   * @name MintOnDemand
+   * @request PATCH:/{companyId}/token-editions/mint-on-demand
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Need user with one of these roles: superAdmin, admin, integration, application
+   */
+  export namespace MintOnDemand {
+    export type RequestParams = {
+      companyId: string;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = MintOnDemandDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -2447,7 +2475,7 @@ export namespace TokenCollectionsByCompany {
    * @name SyncDraftTokens
    * @request PATCH:/{companyId}/token-collections/{id}/sync-draft-tokens
    * @secure
-   * @response `201` `PublishTokenCollectionResponseDto`
+   * @response `201` `JobIdResponseDto`
    * @response `401` `void` Need user with one of these roles: superAdmin, admin
    */
   export namespace SyncDraftTokens {
@@ -2458,7 +2486,7 @@ export namespace TokenCollectionsByCompany {
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = PublishTokenCollectionResponseDto;
+    export type ResponseBody = JobIdResponseDto;
   }
   /**
    * @description Publish a token Collection
@@ -2480,19 +2508,37 @@ export namespace TokenCollectionsByCompany {
     export type ResponseBody = PublishTokenCollectionResponseDto;
   }
   /**
-   * @description Marks a token collection with token pass flag
+   * @description Marks a token collection is token pass
    * @tags Token Collections
-   * @name UpdatePass
-   * @request PATCH:/{companyId}/token-collections/update-pass/{id}/{pass}
+   * @name EnableTokenPass
+   * @request PATCH:/{companyId}/token-collections/{id}/pass/enable
    * @secure
    * @response `204` `void`
    * @response `401` `void` Need user with one of these roles: integration
    */
-  export namespace UpdatePass {
+  export namespace EnableTokenPass {
     export type RequestParams = {
       companyId: string;
       id: string;
-      pass: boolean;
+    };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Disable token pass for a collection
+   * @tags Token Collections
+   * @name DisableTokenPass
+   * @request PATCH:/{companyId}/token-collections/{id}/pass/disable
+   * @secure
+   * @response `204` `void`
+   * @response `401` `void` Need user with one of these roles: integration
+   */
+  export namespace DisableTokenPass {
+    export type RequestParams = {
+      companyId: string;
+      id: string;
     };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -2603,25 +2649,6 @@ export namespace TokenCollectionsByCompany {
   /**
    * No description
    * @tags Token Collections
-   * @name ExportCsvTemplate
-   * @request GET:/{companyId}/token-collections/{id}/export/csv
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Need user with one of these roles: superAdmin, admin
-   */
-  export namespace ExportCsvTemplate {
-    export type RequestParams = {
-      companyId: string;
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Token Collections
    * @name ExportXlsxTemplate
    * @request GET:/{companyId}/token-collections/{id}/export/xlsx
    * @secure
@@ -2644,7 +2671,7 @@ export namespace TokenCollectionsByCompany {
    * @name ImportXlsxEditions
    * @request POST:/{companyId}/token-collections/{id}/import/xlsx
    * @secure
-   * @response `200` `void`
+   * @response `200` `JobIdResponseDto`
    * @response `401` `void` Need user with one of these roles: superAdmin, admin
    */
   export namespace ImportXlsxEditions {
@@ -2658,29 +2685,7 @@ export namespace TokenCollectionsByCompany {
       file: File;
     };
     export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Token Collections
-   * @name ImportCsvEditions
-   * @request POST:/{companyId}/token-collections/{id}/import/csv
-   * @secure
-   * @response `200` `void`
-   * @response `401` `void` Need user with one of these roles: superAdmin, admin
-   */
-  export namespace ImportCsvEditions {
-    export type RequestParams = {
-      companyId: string;
-      id: string;
-    };
-    export type RequestQuery = {};
-    export type RequestBody = {
-      /** @format binary */
-      file: File;
-    };
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = JobIdResponseDto;
   }
 }
 
@@ -3048,13 +3053,13 @@ export namespace Metadata {
    * No description
    * @tags Metadata
    * @name TokenPayload
-   * @request GET:/metadata/token/{address}/{chainId}/{tokenId}
+   * @request GET:/metadata/token/{contractAddress}/{chainId}/{tokenId}
    * @response `200` `TokenPayloadDto`
    */
   export namespace TokenPayload {
     export type RequestParams = {
       /** @example "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188" */
-      address: string;
+      contractAddress: string;
       /** @example 4 */
       chainId: ChainId;
       tokenId: number;
@@ -3108,13 +3113,13 @@ export namespace Metadata {
    * No description
    * @tags Metadata
    * @name PublicPageByAddress
-   * @request GET:/metadata/address/{address}/{chainId}/{tokenId}
+   * @request GET:/metadata/address/{contractAddress}/{chainId}/{tokenId}
    * @response `200` `PublicPageDataDto`
    */
   export namespace PublicPageByAddress {
     export type RequestParams = {
       /** @example "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188" */
-      address: string;
+      contractAddress: string;
       /** @example 4 */
       chainId: ChainId;
       tokenId: number;
@@ -3169,14 +3174,14 @@ export namespace Metadata {
    * No description
    * @tags Metadata
    * @name GetNftByContractAndTokenId
-   * @request GET:/metadata/nfts/{address}/{chainId}/{tokenId}
+   * @request GET:/metadata/nfts/{contractAddress}/{chainId}/{tokenId}
    * @response `200` `NFTsMetadataResponseDto`
    * @response `default` `void` NFT metadata related a contract address
    */
   export namespace GetNftByContractAndTokenId {
     export type RequestParams = {
       /** @example "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188" */
-      address: string;
+      contractAddress: string;
       /** @example 4 */
       chainId: ChainId;
       tokenId: number;
@@ -3407,7 +3412,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title offpix-backend
- * @version 0.9.3
+ * @version 0.9.7
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -4449,6 +4454,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @format uuid */
         userId?: string;
         status?: (
+          | 'importError'
           | 'draft'
           | 'draftError'
           | 'readyToMint'
@@ -4512,6 +4518,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     changeStatusReadyToMint: (companyId: string, data: ChangeStatusReadyToMintDto, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/${companyId}/token-editions/ready-to-mint`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description Mint on demand
+     *
+     * @tags Token Editions
+     * @name MintOnDemand
+     * @request PATCH:/{companyId}/token-editions/mint-on-demand
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Need user with one of these roles: superAdmin, admin, integration, application
+     */
+    mintOnDemand: (companyId: string, data: MintOnDemandDto, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/${companyId}/token-editions/mint-on-demand`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -4845,11 +4871,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name SyncDraftTokens
      * @request PATCH:/{companyId}/token-collections/{id}/sync-draft-tokens
      * @secure
-     * @response `201` `PublishTokenCollectionResponseDto`
+     * @response `201` `JobIdResponseDto`
      * @response `401` `void` Need user with one of these roles: superAdmin, admin
      */
     syncDraftTokens: (companyId: string, id: string, params: RequestParams = {}) =>
-      this.request<PublishTokenCollectionResponseDto, void>({
+      this.request<JobIdResponseDto, void>({
         path: `/${companyId}/token-collections/${id}/sync-draft-tokens`,
         method: 'PATCH',
         secure: true,
@@ -4879,18 +4905,36 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Marks a token collection with token pass flag
+     * @description Marks a token collection is token pass
      *
      * @tags Token Collections
-     * @name UpdatePass
-     * @request PATCH:/{companyId}/token-collections/update-pass/{id}/{pass}
+     * @name EnableTokenPass
+     * @request PATCH:/{companyId}/token-collections/{id}/pass/enable
      * @secure
      * @response `204` `void`
      * @response `401` `void` Need user with one of these roles: integration
      */
-    updatePass: (companyId: string, id: string, pass: boolean, params: RequestParams = {}) =>
+    enableTokenPass: (companyId: string, id: string, params: RequestParams = {}) =>
       this.request<void, void>({
-        path: `/${companyId}/token-collections/update-pass/${id}/${pass}`,
+        path: `/${companyId}/token-collections/${id}/pass/enable`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Disable token pass for a collection
+     *
+     * @tags Token Collections
+     * @name DisableTokenPass
+     * @request PATCH:/{companyId}/token-collections/{id}/pass/disable
+     * @secure
+     * @response `204` `void`
+     * @response `401` `void` Need user with one of these roles: integration
+     */
+    disableTokenPass: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/${companyId}/token-collections/${id}/pass/disable`,
         method: 'PATCH',
         secure: true,
         ...params,
@@ -5007,24 +5051,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Token Collections
-     * @name ExportCsvTemplate
-     * @request GET:/{companyId}/token-collections/{id}/export/csv
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Need user with one of these roles: superAdmin, admin
-     */
-    exportCsvTemplate: (companyId: string, id: string, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/${companyId}/token-collections/${id}/export/csv`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Token Collections
      * @name ExportXlsxTemplate
      * @request GET:/{companyId}/token-collections/{id}/export/xlsx
      * @secure
@@ -5046,7 +5072,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name ImportXlsxEditions
      * @request POST:/{companyId}/token-collections/{id}/import/xlsx
      * @secure
-     * @response `200` `void`
+     * @response `200` `JobIdResponseDto`
      * @response `401` `void` Need user with one of these roles: superAdmin, admin
      */
     importXlsxEditions: (
@@ -5058,40 +5084,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<void, void>({
+      this.request<JobIdResponseDto, void>({
         path: `/${companyId}/token-collections/${id}/import/xlsx`,
         method: 'POST',
         body: data,
         secure: true,
         type: ContentType.FormData,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Token Collections
-     * @name ImportCsvEditions
-     * @request POST:/{companyId}/token-collections/{id}/import/csv
-     * @secure
-     * @response `200` `void`
-     * @response `401` `void` Need user with one of these roles: superAdmin, admin
-     */
-    importCsvEditions: (
-      companyId: string,
-      id: string,
-      data: {
-        /** @format binary */
-        file: File;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, void>({
-        path: `/${companyId}/token-collections/${id}/import/csv`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.FormData,
+        format: 'json',
         ...params,
       }),
   };
@@ -5490,12 +5489,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Metadata
      * @name TokenPayload
-     * @request GET:/metadata/token/{address}/{chainId}/{tokenId}
+     * @request GET:/metadata/token/{contractAddress}/{chainId}/{tokenId}
      * @response `200` `TokenPayloadDto`
      */
-    tokenPayload: (address: string, chainId: ChainId, tokenId: number, params: RequestParams = {}) =>
+    tokenPayload: (contractAddress: string, chainId: ChainId, tokenId: number, params: RequestParams = {}) =>
       this.request<TokenPayloadDto, any>({
-        path: `/metadata/token/${address}/${chainId}/${tokenId}`,
+        path: `/metadata/token/${contractAddress}/${chainId}/${tokenId}`,
         method: 'GET',
         format: 'json',
         ...params,
@@ -5549,12 +5548,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Metadata
      * @name PublicPageByAddress
-     * @request GET:/metadata/address/{address}/{chainId}/{tokenId}
+     * @request GET:/metadata/address/{contractAddress}/{chainId}/{tokenId}
      * @response `200` `PublicPageDataDto`
      */
-    publicPageByAddress: (address: string, chainId: ChainId, tokenId: number, params: RequestParams = {}) =>
+    publicPageByAddress: (contractAddress: string, chainId: ChainId, tokenId: number, params: RequestParams = {}) =>
       this.request<PublicPageDataDto, any>({
-        path: `/metadata/address/${address}/${chainId}/${tokenId}`,
+        path: `/metadata/address/${contractAddress}/${chainId}/${tokenId}`,
         method: 'GET',
         format: 'json',
         ...params,
@@ -5606,12 +5605,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Metadata
      * @name GetNftByContractAndTokenId
-     * @request GET:/metadata/nfts/{address}/{chainId}/{tokenId}
+     * @request GET:/metadata/nfts/{contractAddress}/{chainId}/{tokenId}
      * @response `200` `NFTsMetadataResponseDto`
      * @response `default` `void` NFT metadata related a contract address
      */
     getNftByContractAndTokenId: (
-      address: string,
+      contractAddress: string,
       chainId: ChainId,
       tokenId: number,
       query: {
@@ -5620,7 +5619,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<NFTsMetadataResponseDto, any>({
-        path: `/metadata/nfts/${address}/${chainId}/${tokenId}`,
+        path: `/metadata/nfts/${contractAddress}/${chainId}/${tokenId}`,
         method: 'GET',
         query: query,
         format: 'json',

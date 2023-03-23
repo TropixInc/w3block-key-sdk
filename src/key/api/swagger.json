@@ -2542,6 +2542,7 @@
               "items": {
                 "type": "string",
                 "enum": [
+                  "importError",
                   "draft",
                   "draftError",
                   "readyToMint",
@@ -2678,6 +2679,58 @@
           },
           "401": {
             "description": "Need user with one of these roles: superAdmin, admin"
+          }
+        },
+        "tags": [
+          "Token Editions"
+        ],
+        "security": [
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-editions/mint-on-demand": {
+      "patch": {
+        "operationId": "mintOnDemand",
+        "summary": "",
+        "description": "Mint on demand",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MintOnDemandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Need user with one of these roles: superAdmin, admin, integration, application"
           }
         },
         "tags": [
@@ -3623,7 +3676,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PublishTokenCollectionResponseDto"
+                  "$ref": "#/components/schemas/JobIdResponseDto"
                 }
               }
             }
@@ -3718,11 +3771,11 @@
         ]
       }
     },
-    "/{companyId}/token-collections/update-pass/{id}/{pass}": {
+    "/{companyId}/token-collections/{id}/pass/enable": {
       "patch": {
-        "operationId": "updatePass",
+        "operationId": "enableTokenPass",
         "summary": "",
-        "description": "Marks a token collection with token pass flag",
+        "description": "Marks a token collection is token pass",
         "parameters": [
           {
             "name": "companyId",
@@ -3739,13 +3792,55 @@
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "Need user with one of these roles: integration"
+          }
+        },
+        "tags": [
+          "Token Collections"
+        ],
+        "security": [
+          {
+            "x-w3block-api-key": []
           },
           {
-            "name": "pass",
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          },
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/{companyId}/token-collections/{id}/pass/disable": {
+      "patch": {
+        "operationId": "disableTokenPass",
+        "summary": "",
+        "description": "Disable token pass for a collection",
+        "parameters": [
+          {
+            "name": "companyId",
             "required": true,
             "in": "path",
             "schema": {
-              "type": "boolean"
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -4074,54 +4169,6 @@
         ]
       }
     },
-    "/{companyId}/token-collections/{id}/export/csv": {
-      "get": {
-        "operationId": "exportCsvTemplate",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "401": {
-            "description": "Need user with one of these roles: superAdmin, admin"
-          }
-        },
-        "tags": [
-          "Token Collections"
-        ],
-        "security": [
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          },
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
     "/{companyId}/token-collections/{id}/export/xlsx": {
       "get": {
         "operationId": "exportXLSXTemplate",
@@ -4212,74 +4259,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
-          },
-          "401": {
-            "description": "Need user with one of these roles: superAdmin, admin"
-          }
-        },
-        "tags": [
-          "Token Collections"
-        ],
-        "security": [
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          },
-          {
-            "bearer": []
-          }
-        ]
-      }
-    },
-    "/{companyId}/token-collections/{id}/import/csv": {
-      "post": {
-        "operationId": "importCSVEditions",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                },
-                "required": [
-                  "file"
-                ]
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobIdResponseDto"
+                }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": ""
           },
           "401": {
             "description": "Need user with one of these roles: superAdmin, admin"
@@ -5283,12 +5270,12 @@
         ]
       }
     },
-    "/metadata/token/{address}/{chainId}/{tokenId}": {
+    "/metadata/token/{contractAddress}/{chainId}/{tokenId}": {
       "get": {
         "operationId": "tokenPayload",
         "parameters": [
           {
-            "name": "address",
+            "name": "contractAddress",
             "required": true,
             "in": "path",
             "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
@@ -5441,12 +5428,12 @@
         ]
       }
     },
-    "/metadata/address/{address}/{chainId}/{tokenId}": {
+    "/metadata/address/{contractAddress}/{chainId}/{tokenId}": {
       "get": {
         "operationId": "publicPageByAddress",
         "parameters": [
           {
-            "name": "address",
+            "name": "contractAddress",
             "required": true,
             "in": "path",
             "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
@@ -5580,12 +5567,12 @@
         ]
       }
     },
-    "/metadata/nfts/{address}/{chainId}/{tokenId}": {
+    "/metadata/nfts/{contractAddress}/{chainId}/{tokenId}": {
       "get": {
         "operationId": "getNFTByContractAndTokenId",
         "parameters": [
           {
-            "name": "address",
+            "name": "contractAddress",
             "required": true,
             "in": "path",
             "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b188",
@@ -5872,7 +5859,7 @@
   "info": {
     "title": "offpix-backend",
     "description": "",
-    "version": "0.9.3",
+    "version": "0.9.7",
     "contact": {}
   },
   "tags": [],
@@ -6374,14 +6361,14 @@
             "$ref": "#/components/schemas/ChainId"
           },
           "description": {
-            "type": "string"
+            "type": "object"
           },
           "image": {
-            "type": "string",
+            "type": "object",
             "example": "https://dummyimage.com/600x400/fff/000"
           },
           "externalLink": {
-            "type": "string",
+            "type": "object",
             "example": "https://stg.pixway.io"
           },
           "participants": {
@@ -6404,12 +6391,16 @@
             }
           },
           "transferWhitelistId": {
-            "type": "string",
+            "type": "object",
             "format": "uuid"
           },
           "minterWhitelistId": {
-            "type": "string",
+            "type": "object",
             "format": "uuid"
+          },
+          "maxSupply": {
+            "type": "string",
+            "example": null
           }
         },
         "required": [
@@ -6426,24 +6417,6 @@
           "publishing",
           "published",
           "failed"
-        ]
-      },
-      "RoyaltyPlatformDto": {
-        "type": "object",
-        "properties": {
-          "payee": {
-            "type": "string"
-          },
-          "share": {
-            "type": "number"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "payee",
-          "share"
         ]
       },
       "ContractActionStatus": {
@@ -6529,94 +6502,23 @@
           "executeAt"
         ]
       },
-      "RoyaltyContractEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string"
-          },
-          "status": {
-            "default": "draft",
-            "example": "draft",
-            "$ref": "#/components/schemas/ContractStatus"
-          },
-          "address": {
-            "type": "string"
-          },
-          "chainId": {
-            "type": "number"
-          },
-          "platform": {
-            "$ref": "#/components/schemas/RoyaltyPlatformDto"
-          },
-          "participants": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "blockchain": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "fee": {
-            "type": "number"
-          },
-          "contractAction": {
-            "$ref": "#/components/schemas/ContractActionEntityDto"
-          },
-          "contractActionId": {
-            "type": "string"
-          },
-          "isContract": {
-            "type": "boolean"
-          },
-          "deletedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "companyId",
-          "status",
-          "chainId",
-          "platform",
-          "participants",
-          "blockchain",
-          "fee",
-          "contractAction",
-          "contractActionId",
-          "isContract"
-        ]
-      },
       "NftContractEntityDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "companyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "royalty": {
-            "$ref": "#/components/schemas/RoyaltyContractEntityDto"
+            "type": "object"
           },
           "royaltyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "address": {
             "type": "string"
@@ -6687,6 +6589,9 @@
           "minterWhitelistId": {
             "type": "string",
             "format": "uuid"
+          },
+          "maxSupply": {
+            "type": "number"
           }
         },
         "required": [
@@ -6765,14 +6670,14 @@
             "$ref": "#/components/schemas/ChainId"
           },
           "description": {
-            "type": "string"
+            "type": "object"
           },
           "image": {
-            "type": "string",
+            "type": "object",
             "example": "https://dummyimage.com/600x400/fff/000"
           },
           "externalLink": {
-            "type": "string",
+            "type": "object",
             "example": "https://stg.pixway.io"
           },
           "participants": {
@@ -6795,12 +6700,16 @@
             }
           },
           "transferWhitelistId": {
-            "type": "string",
+            "type": "object",
             "format": "uuid"
           },
           "minterWhitelistId": {
-            "type": "string",
+            "type": "object",
             "format": "uuid"
+          },
+          "maxSupply": {
+            "type": "string",
+            "example": null
           }
         }
       },
@@ -6948,6 +6857,23 @@
           "transactionIndex",
           "args"
         ]
+      },
+      "RoyaltyPlatformDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "W3block"
+          },
+          "share": {
+            "type": "number",
+            "example": 2
+          },
+          "payee": {
+            "type": "string",
+            "example": "0xbc99eb9e5a05c72ca34c3554d12266e7a48e63b7"
+          }
+        }
       },
       "CreateCompanyDto": {
         "type": "object",
@@ -7342,13 +7268,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "companyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "royaltyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "address": {
             "type": "string"
@@ -7416,6 +7345,9 @@
           "minterWhitelistId": {
             "type": "string",
             "format": "uuid"
+          },
+          "maxSupply": {
+            "type": "number"
           }
         },
         "required": [
@@ -7433,6 +7365,7 @@
       "TokenEditionStatusEnum": {
         "type": "string",
         "enum": [
+          "importError",
           "draft",
           "draftError",
           "readyToMint",
@@ -7679,6 +7612,28 @@
           "editionId"
         ]
       },
+      "MintOnDemandDto": {
+        "type": "object",
+        "properties": {
+          "editionNumbers": {
+            "type": "number",
+            "example": [],
+            "description": "Array of edition number"
+          },
+          "collectionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerAddress": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "editionNumbers",
+          "collectionId",
+          "ownerAddress"
+        ]
+      },
       "TransferTokensDto": {
         "type": "object",
         "properties": {
@@ -7702,10 +7657,6 @@
       "UpdateTokenEditionDto": {
         "type": "object",
         "properties": {
-          "tokenCollectionId": {
-            "type": "string",
-            "example": ""
-          },
           "name": {
             "type": "string",
             "example": "Token Collection"
@@ -7728,10 +7679,7 @@
             "type": "string",
             "example": null
           }
-        },
-        "required": [
-          "tokenCollectionId"
-        ]
+        }
       },
       "TokenEditionEntityDto": {
         "type": "object",
@@ -8218,16 +8166,13 @@
           "similarTokens"
         ]
       },
-      "PublishTokenCollectionResponseDto": {
+      "JobIdResponseDto": {
         "type": "object",
         "properties": {
-          "tokenCollection": {
-            "$ref": "#/components/schemas/TokenCollectionEntityDto"
+          "jobId": {
+            "type": "string"
           }
-        },
-        "required": [
-          "tokenCollection"
-        ]
+        }
       },
       "UpdateTokenCollectionDto": {
         "type": "object",
@@ -8271,6 +8216,17 @@
           "name",
           "quantity",
           "rangeInitialToMint"
+        ]
+      },
+      "PublishTokenCollectionResponseDto": {
+        "type": "object",
+        "properties": {
+          "tokenCollection": {
+            "$ref": "#/components/schemas/TokenCollectionEntityDto"
+          }
+        },
+        "required": [
+          "tokenCollection"
         ]
       },
       "TokenCollectionPaginateResponseDto": {
@@ -8481,6 +8437,11 @@
             "type": "number",
             "example": 1
           },
+          "tokenId": {
+            "type": "number",
+            "example": 1,
+            "nullable": true
+          },
           "isAvailable": {
             "type": "boolean",
             "example": true
@@ -8488,6 +8449,10 @@
           "id": {
             "type": "string",
             "format": "uuid"
+          },
+          "status": {
+            "example": "minted",
+            "$ref": "#/components/schemas/TokenEditionStatusEnum"
           }
         },
         "required": [
@@ -8495,7 +8460,8 @@
           "contractAddress",
           "editionNumber",
           "isAvailable",
-          "id"
+          "id",
+          "status"
         ]
       },
       "TokenPayloadAttributeDto": {
@@ -8615,6 +8581,9 @@
           },
           "collectionName": {
             "type": "string"
+          },
+          "collectionPass": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -8623,7 +8592,8 @@
           "subcategoryId",
           "subcategoryName",
           "collectionId",
-          "collectionName"
+          "collectionName",
+          "collectionPass"
         ]
       },
       "PublicDataInformationDto": {
